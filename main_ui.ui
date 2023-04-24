@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1351</width>
-    <height>715</height>
+    <height>720</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -198,7 +198,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="resource.qrc">:/icon/icon/Logo.png</pixmap>
+            <pixmap>:/icon/icon/Logo.png</pixmap>
            </property>
            <property name="scaledContents">
             <bool>true</bool>
@@ -221,7 +221,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="resource.qrc">
+            <iconset>
              <normaloff>:/icon/icon/home-4-32.ico</normaloff>
              <normalon>:/icon/icon/home-4-48.ico</normalon>:/icon/icon/home-4-32.ico</iconset>
            </property>
@@ -245,7 +245,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="resource.qrc">
+            <iconset>
              <normaloff>:/icon/icon/dashboard-5-32.ico</normaloff>
              <normalon>:/icon/icon/dashboard-5-48.ico</normalon>:/icon/icon/dashboard-5-32.ico</iconset>
            </property>
@@ -269,7 +269,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="resource.qrc">
+            <iconset>
              <normaloff>:/icon/icon/activity-feed-32.ico</normaloff>
              <normalon>:/icon/icon/activity-feed-48.ico</normalon>:/icon/icon/activity-feed-32.ico</iconset>
            </property>
@@ -293,7 +293,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="resource.qrc">
+            <iconset>
              <normaloff>:/icon/icon/product-32.ico</normaloff>
              <normalon>:/icon/icon/product-48.ico</normalon>:/icon/icon/product-32.ico</iconset>
            </property>
@@ -317,7 +317,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="resource.qrc">
+            <iconset>
              <normaloff>:/icon/icon/group-32.ico</normaloff>
              <normalon>:/icon/icon/group-48.ico</normalon>:/icon/icon/group-32.ico</iconset>
            </property>
@@ -363,7 +363,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="resource.qrc">
+          <iconset>
            <normaloff>:/icon/icon/close-window-64.ico</normaloff>:/icon/icon/close-window-64.ico</iconset>
          </property>
          <property name="iconSize">
@@ -406,7 +406,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="resource.qrc">:/icon/icon/Logo.png</pixmap>
+            <pixmap>:/icon/icon/Logo.png</pixmap>
            </property>
            <property name="scaledContents">
             <bool>true</bool>
@@ -441,7 +441,7 @@
             <string>Home</string>
            </property>
            <property name="icon">
-            <iconset resource="resource.qrc">
+            <iconset>
              <normaloff>:/icon/icon/home-4-32.ico</normaloff>
              <normalon>:/icon/icon/home-4-48.ico</normalon>:/icon/icon/home-4-32.ico</iconset>
            </property>
@@ -465,7 +465,7 @@
             <string>Dashboard</string>
            </property>
            <property name="icon">
-            <iconset resource="resource.qrc">
+            <iconset>
              <normaloff>:/icon/icon/dashboard-5-32.ico</normaloff>
              <normalon>:/icon/icon/dashboard-5-48.ico</normalon>:/icon/icon/dashboard-5-32.ico</iconset>
            </property>
@@ -489,7 +489,7 @@
             <string>Gestion users</string>
            </property>
            <property name="icon">
-            <iconset resource="resource.qrc">
+            <iconset>
              <normaloff>:/icon/icon/activity-feed-32.ico</normaloff>
              <normalon>:/icon/icon/activity-feed-48.ico</normalon>:/icon/icon/activity-feed-32.ico</iconset>
            </property>
@@ -513,7 +513,7 @@
             <string>Gestion voiture</string>
            </property>
            <property name="icon">
-            <iconset resource="resource.qrc">
+            <iconset>
              <normaloff>:/icon/icon/product-32.ico</normaloff>
              <normalon>:/icon/icon/product-48.ico</normalon>:/icon/icon/product-32.ico</iconset>
            </property>
@@ -537,7 +537,7 @@
             <string>Gestion client</string>
            </property>
            <property name="icon">
-            <iconset resource="resource.qrc">
+            <iconset>
              <normaloff>:/icon/icon/group-32.ico</normaloff>
              <normalon>:/icon/icon/group-48.ico</normalon>:/icon/icon/group-32.ico</iconset>
            </property>
@@ -605,7 +605,7 @@
           <string>Exit</string>
          </property>
          <property name="icon">
-          <iconset resource="resource.qrc">
+          <iconset>
            <normaloff>:/icon/icon/close-window-64.ico</normaloff>:/icon/icon/close-window-64.ico</iconset>
          </property>
          <property name="iconSize">
@@ -667,7 +667,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="resource.qrc">
+             <iconset>
               <normaloff>:/icon/icon/menu-4-32.ico</normaloff>:/icon/icon/menu-4-32.ico</iconset>
             </property>
             <property name="iconSize">
@@ -722,7 +722,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="resource.qrc">
+               <iconset>
                 <normaloff>:/icon/icon/search-13-48.ico</normaloff>:/icon/icon/search-13-48.ico</iconset>
               </property>
              </widget>
@@ -751,7 +751,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="resource.qrc">
+             <iconset>
               <normaloff>:/icon/icon/user-48.ico</normaloff>:/icon/icon/user-48.ico</iconset>
             </property>
            </widget>
@@ -762,7 +762,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>0</number>
+          <number>3</number>
          </property>
          <widget class="QWidget" name="home">
           <layout class="QGridLayout" name="gridLayout_2">
@@ -823,6 +823,149 @@
          </widget>
          <widget class="QWidget" name="page_crud_cars">
           <layout class="QGridLayout" name="gridLayout_5">
+           <item row="1" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <widget class="QFrame" name="frame_4">
+               <property name="minimumSize">
+                <size>
+                 <width>519</width>
+                 <height>628</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: transparent</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <widget class="QTableWidget" name="tableWidgetCar">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>611</width>
+                  <height>628</height>
+                 </rect>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>256</width>
+                  <height>628</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: transparent</string>
+                </property>
+               </widget>
+               <widget class="QLineEdit" name="model">
+                <property name="geometry">
+                 <rect>
+                  <x>710</x>
+                  <y>100</y>
+                  <width>241</width>
+                  <height>41</height>
+                 </rect>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">border: 0;
+border-bottom: 1px solid rgb(0, 85, 255);
+color: black;</string>
+                </property>
+                <property name="placeholderText">
+                 <string>Nom voiture</string>
+                </property>
+               </widget>
+               <widget class="QComboBox" name="comboBoxBrand">
+                <property name="geometry">
+                 <rect>
+                  <x>710</x>
+                  <y>190</y>
+                  <width>231</width>
+                  <height>31</height>
+                 </rect>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(170, 170, 255)</string>
+                </property>
+               </widget>
+               <widget class="QComboBox" name="comboBoxFuel">
+                <property name="geometry">
+                 <rect>
+                  <x>710</x>
+                  <y>270</y>
+                  <width>241</width>
+                  <height>31</height>
+                 </rect>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(170, 170, 255)</string>
+                </property>
+               </widget>
+               <widget class="QLabel" name="image_label">
+                <property name="geometry">
+                 <rect>
+                  <x>650</x>
+                  <y>430</y>
+                  <width>371</width>
+                  <height>141</height>
+                 </rect>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>MS Gothic</family>
+                  <pointsize>-1</pointsize>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">color: white</string>
+                </property>
+                <property name="text">
+                 <string>image</string>
+                </property>
+               </widget>
+               <widget class="QPushButton" name="AddButton">
+                <property name="geometry">
+                 <rect>
+                  <x>704</x>
+                  <y>340</y>
+                  <width>251</width>
+                  <height>41</height>
+                 </rect>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(30,200,200);
+border: 0</string>
+                </property>
+                <property name="text">
+                 <string>addCar</string>
+                </property>
+               </widget>
+               <widget class="QPushButton" name="addImage">
+                <property name="geometry">
+                 <rect>
+                  <x>640</x>
+                  <y>20</y>
+                  <width>111</width>
+                  <height>31</height>
+                 </rect>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: red;
+border: 0;
+color: white;</string>
+                </property>
+                <property name="text">
+                 <string>addImage</string>
+                </property>
+               </widget>
+              </widget>
+             </item>
+            </layout>
+           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_7">
              <property name="font">
@@ -926,6 +1069,23 @@ border: 0;</string>
               </property>
               <property name="text">
                <string>Liste de reservation</string>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="add_client_btn">
+              <property name="geometry">
+               <rect>
+                <x>760</x>
+                <y>20</y>
+                <width>181</width>
+                <height>31</height>
+               </rect>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(85, 170, 0);
+border: 0;</string>
+              </property>
+              <property name="text">
+               <string>Ajouter un client</string>
               </property>
              </widget>
             </widget>

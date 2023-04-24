@@ -30,3 +30,34 @@ class Client:
         self.connexion.cursor.execute(req)
         self.connexion.conn.commit()
         print("deleted succesfully")
+
+    def addClient(self, client_dict):
+        if self.connexion.connect():
+            try:
+                # create for the user a login and a password:
+                req1 = f"INSERT INTO utilisateur(`nom`, `prenom`, `login`, `mdp`) " \
+                       f"VALUES ('{client_dict['nom']}', '{client_dict['prenom']}', '{client_dict['login']}', '{client_dict['mdp']}')"
+                self.connexion.cursor.execute(req1)
+
+                num_rows = self.connexion.cursor.rowcount
+
+                # get the id of the current row:
+                req2 = f"SELECT idUser FROM utilisateur ORDER BY idUser DESC LIMIT {num_rows}"
+                self.connexion.cursor.execute(req2)
+                result = self.connexion.cursor.fetchone()
+                client_id = result[0]
+
+                # creating the client:
+                req3 = f"INSERT INTO client(`idUser`, `adresse`, `cin`, `liste_noire`, `permis`, `passport`, `email`, " \
+                       f"`observation`, `societe`, `ville`, `tel`) " \
+                       f"VALUES ('{client_id}', '{client_dict['adresse']}', '{client_dict['cin']}', " \
+                       f"'{client_dict['liste_noire']}', '{client_dict['permis']}', '{client_dict['passport']}', " \
+                       f"'{client_dict['email']}', '{client_dict['observation']}', '{client_dict['societe']}', " \
+                       f"'{client_dict['ville']}', '{client_dict['tel']}')"
+                self.connexion.cursor.execute(req3)
+                
+                
+                self.connexion.conn.commit()
+                print("Added successfully")
+            except Exception as e:
+                print(f"Error: {e}")
