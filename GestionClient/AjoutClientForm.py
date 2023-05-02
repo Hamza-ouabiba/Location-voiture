@@ -15,7 +15,7 @@ class AjoutClient(QtWidgets.QMainWindow):
         self.table = tableWid
         self.client = Client.Client()
         self.convert = Convertion.convert()
-        self.ui = uic.loadUi("../main/editClient_ui.ui",self)
+        self.ui = uic.loadUi("../Location-voiture/editClient_ui.ui",self)
         self.ui.image_btn.clicked.connect(self.image_dialog)
         self.ui.valider_btn.clicked.connect(self.AddButtonClient)
         self.ui.genererPass.clicked.connect(self.generateRandomPassword)
