@@ -164,7 +164,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.add_image_Btn.clicked.connect(self.image_dialog)
             self.ui.search_input.textChanged.connect(self.sync_SearchLine)
             self.ui.all_cars_btn.clicked.connect(lambda : self.displayCars(self.car.getAll()))
-            self.addcar_Btn.clicked.connect(self.addCar)
+            self.ui.addcar_Btn.clicked.connect(self.addCar)
+            self.ui.search_btn.clicked.connect(self.search_btn_Clicked)
 
         except Exception as e:
             print(e)
@@ -296,10 +297,25 @@ class MainWindow(QtWidgets.QMainWindow):
 
     ############################################## Car Section ########################################################
     def sync_SearchLine(self, text):
-        # Retrieve data from the database
-        car_data = self.car.searchByModel(text)
-        self.displayCars(car_data)
-
+        try:
+            # Retrieve data from the database
+            current_index = self.ui.stackedWidget.currentIndex()
+            if self.ui.stackedWidget.widget(current_index) == self.ui.page_crud_cars:
+                car_data = self.car.searchByModel(text)
+                self.displayCars(car_data)
+        except Exception as e:
+            print(f"search_btn_Clicked  : An error occurred: {e}")
+    def search_btn_Clicked(self):
+        try:
+            current_index = self.ui.stackedWidget.currentIndex()
+            if self.ui.stackedWidget.widget(current_index) == self.ui.page_scarp_cars:
+                self.ui.comboAllModels.setCurrentIndex(0)
+                brand = self.ui.comboAllBrands.currentText()
+                if (brand != 0 and self.ui.search_input.text()!=""):
+                    car_data = self.scraping.searchCarsByModel(brand,self.ui.search_input.text())
+                    self.displayModels(car_data)
+        except Exception as e:
+            print(f"search_btn_Clicked  : An error occurred: {e}")
 
     def addCar(self):
         try:
@@ -384,7 +400,7 @@ class MainWindow(QtWidgets.QMainWindow):
                         if confirm == QMessageBox.Yes:
                             self.car.update(int(self.id_SelectedCar), int(brand), model, int(fuel), img, int(gearbox),
                                             float(self.ui.price.text()), float(self.ui.power.text()),
-                                            int(self.ui.seats.text()), int(self.ui.doors.text()), production_date)
+                                            int(self.ui.seats.text()), int(self.ui.doors.value()), production_date,imagesList)
                             self.tool.warning("car model :" + model + " has been modified ")
                             self.reset_AddCarpage()
 
@@ -404,7 +420,7 @@ class MainWindow(QtWidgets.QMainWindow):
                             print(brand)
                             self.car.add(int(brand), model, int(fuel), img, int(gearbox), float(self.ui.price.text()),
                                          float(self.ui.power.text()), int(self.ui.seats.text()),
-                                         int(self.ui.doors.text()),
+                                         int(self.ui.doors.value()),
                                          production_date , imagesList)
                             self.tool.warning("car model :"+model+" has been added ")
                             self.add_DataJson = False
@@ -669,10 +685,12 @@ class MainWindow(QtWidgets.QMainWindow):
                     print(key)
                 if combo.objectName() == 'comboBoxBrand' or combo.objectName() == 'comboBoxBrand_1':
                     data = self.car.searchByIdBrand(key)
+                    self.ui.search_input.setText("")
                 elif combo.objectName() == 'comboBoxFuel' or combo.objectName() == 'comboBoxFuel_1':
                     # Retrieve data from the database based on the selected item
                     data = self.fuel.searchByIdFuel(key)
                 elif combo.objectName() == 'comboAllBrands':
+                    self.ui.search_input.setText("")
                     #data = self.scraping.getCarsByBrand(value)
                     dd = self.tool.fill_combobox(self.ui.comboAllModels, value)
                     #self.displayModels(data)

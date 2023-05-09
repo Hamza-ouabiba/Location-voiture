@@ -88,9 +88,7 @@ class scrap:
                     })
 
 
-        # Write the data to a JSON file
-        with open("brands_models.json", "w") as f:
-            json.dump(data, f, indent=4)
+
 
     def addImageUrl(self,data):
         # Create a new dictionary to store the updated data
@@ -197,14 +195,6 @@ class scrap:
 
         return models
 
-    def getCarsByBrand(self,brand_name):
-
-        car_data = self.data.get(brand_name)
-        if car_data is None:
-            print(f"No data found for brand {brand_name}")
-            return []
-
-        return car_data
 
     def getCarByModel(self, brand, model):
         car_data = self.data.get(brand)
@@ -213,23 +203,32 @@ class scrap:
             return []
         matching_cars = []
         for car in car_data:
-            if car["model"] == model:
+            if car["model"].lower() == model.lower():
                 matching_cars.append(car)
         return matching_cars
 
-    def get(self):
-        data = json.loads(self.data)
-        for brand in data.values():
-            for item in brand:
-                for value in item.values():
-                    if isinstance(value, list):
-                        for image in value:
-                            print(image)
-                    elif isinstance(value, dict):
-                        for detail in value.values():
-                            print(detail)
-                    else:
-                        print(value)
+    def getCarsByModel(self, brand, model):
+        car_data = self.data.get(brand)
+        if car_data is None:
+            print(f"No data found for brand {brand}")
+            return []
+        matching_cars = []
+        for car in car_data:
+            if car["model"].lower() == model.lower():
+                matching_cars.append(car)
+        return matching_cars
+
+    def searchCarsByModel(self, brand, model):
+        car_data = self.data.get(brand)
+        if car_data is None:
+            print(f"No data found for brand {brand}")
+            return []
+        matching_cars = []
+        for car in car_data:
+            if car["model"].lower().startswith(model.lower()):
+                matching_cars.append(car)
+        return matching_cars
+
 
 #######################################################################################################################
 
