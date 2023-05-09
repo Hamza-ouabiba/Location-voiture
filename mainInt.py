@@ -160,13 +160,14 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.comboAllModels.currentIndexChanged.connect(lambda : self.id_SelectedCombobox(self.ui.comboAllModels))
             # handle click table wisget
             self.ui.tableWidgetCar.clicked.connect(lambda: self.edit_Car(self.tool.handlClick(self.ui.tableWidgetCar.currentIndex(),self.ui.tableWidgetCar)))
-            self.ui.tableWidgeModels.clicked.connect(lambda: self.redirect_to_AddCarPage(self.scraping.getCarByModel(self.ui.comboAllBrands.currentText(),self.ui.comboAllModels.currentText())))
+            self.ui.tableWidgeModels.clicked.connect(self.redirect_to_AddCarPage)
             # linking the update button with the update method:
             print("# linking the update button with the update method")
             self.ui.add_image_Btn.clicked.connect(self.image_dialog)
             self.ui.search_input.textChanged.connect(self.sync_SearchLine)
             self.ui.all_cars_btn.clicked.connect(lambda : self.displayCars(self.car.getAll()))
-            self.addcar_Btn.clicked.connect(self.addCar)
+            self.ui.addcar_Btn.clicked.connect(self.addCar)
+            self.ui.search_btn.clicked.connect(self.search_btn_Clicked)
 
         except Exception as e:
             print(e)
@@ -297,10 +298,25 @@ class MainWindow(QtWidgets.QMainWindow):
 
     ############################################## Car Section ########################################################
     def sync_SearchLine(self, text):
-        # Retrieve data from the database
-        car_data = self.car.searchByModel(text)
-        self.displayCars(car_data)
-
+        try:
+            # Retrieve data from the database
+            current_index = self.ui.stackedWidget.currentIndex()
+            if self.ui.stackedWidget.widget(current_index) == self.ui.page_crud_cars:
+                car_data = self.car.searchByModel(text)
+                self.displayCars(car_data)
+        except Exception as e:
+            print(f"search_btn_Clicked  : An error occurred: {e}")
+    def search_btn_Clicked(self):
+        try:
+            current_index = self.ui.stackedWidget.currentIndex()
+            if self.ui.stackedWidget.widget(current_index) == self.ui.page_scarp_cars:
+                self.ui.comboAllModels.setCurrentIndex(0)
+                brand = self.ui.comboAllBrands.currentText()
+                if (brand != 0 and self.ui.search_input.text()!=""):
+                    car_data = self.scraping.searchCarsByModel(brand,self.ui.search_input.text())
+                    self.displayModels(car_data)
+        except Exception as e:
+            print(f"search_btn_Clicked  : An error occurred: {e}")
 
     def addCar(self):
         try:
@@ -358,17 +374,21 @@ class MainWindow(QtWidgets.QMainWindow):
                 except Exception as e:
                     print(f"self.add_DataJson or self.id_SelectedCar  : An error occurred: {e}")
 
+                print("brand",brand)
                 idBrand = self.brand.getIdByBrand(self.ui.comboBoxBrand_1.currentText())
                 production_date = self.ui.production_date.date().toString("dd-MM-yyyy")
                 production_date = datetime.strptime(production_date, "%d-%m-%Y").date()
+                print("idbrand : ",idBrand)
                 try:
-                    if not idBrand:
+                    if idBrand == []:
                         self.brand.addBrand(self.ui.comboBoxBrand_1.currentText())
-                        brand = self.brand.getLastId()
+                        idBrand = self.brand.getLastId()
                         msg = "new brand has been added :"+self.ui.comboBoxBrand_1.currentText()
                         self.dict_brands = self.tool.fill_combobox(self.ui.comboBoxBrand)
                         self.dict_brands = self.tool.fill_combobox(self.ui.comboBoxBrand_1)
                         self.tool.warning(msg)
+                    else :
+                        idBrand = idBrand[0][0]
                 except Exception as e:
                     print(f"if not idBrand: : An error occurred: {e}")
 
@@ -381,11 +401,11 @@ class MainWindow(QtWidgets.QMainWindow):
                             QMessageBox.Yes | QMessageBox.No,
                             QMessageBox.No
                         )
-
+                        print("idBrand : ",idBrand)
                         if confirm == QMessageBox.Yes:
-                            self.car.update(int(self.id_SelectedCar), int(brand), model, int(fuel), img, int(gearbox),
+                            self.car.update(int(self.id_SelectedCar), int(idBrand), model, int(fuel), img, int(gearbox),
                                             float(self.ui.price.text()), float(self.ui.power.text()),
-                                            int(self.ui.seats.text()), int(self.ui.doors.text()), production_date)
+                                            int(self.ui.seats.text()), int(self.ui.doors.value()), production_date,imagesList)
                             self.tool.warning("car model :" + model + " has been modified ")
                             self.reset_AddCarpage()
 
@@ -402,10 +422,10 @@ class MainWindow(QtWidgets.QMainWindow):
                         )
                         if confirm == QMessageBox.Yes:
                             print("gear : ", gearbox)
-                            print(brand)
-                            self.car.add(int(brand), model, int(fuel), img, int(gearbox), float(self.ui.price.text()),
+                            print("idBrand",idBrand)
+                            self.car.add(int(idBrand), model, int(fuel), img, int(gearbox), float(self.ui.price.text()),
                                          float(self.ui.power.text()), int(self.ui.seats.text()),
-                                         int(self.ui.doors.text()),
+                                         int(self.ui.doors.value()),
                                          production_date , imagesList)
                             self.tool.warning("car model :"+model+" has been added ")
                             self.add_DataJson = False
@@ -442,9 +462,12 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             print(f"edit car : An error occurred: {e}")
             self.reset_AddCarpage()
-    def redirect_to_AddCarPage(self,data):
+    def redirect_to_AddCarPage(self):
         try:
-            print(data)
+            model = self.tool.handlClick(self.ui.tableWidgeModels.currentIndex(),self.ui.tableWidgeModels)
+            print(model)
+            brandIndex = self.ui.comboAllBrands.currentText()
+            data = self.scraping.getCarByModel(brandIndex,model)
             self.fill_AddCarPage_json(data[0])
             self.ui.stackedWidget.setCurrentWidget(self.ui.page_add_car)
         except Exception as e:
@@ -491,7 +514,14 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             self.add_DataJson = True
             print(car["details"]["brand"].split(" ")[0])
-            index = self.ui.comboBoxBrand_1.findText(car["details"]["brand"].split()[0])
+
+            for i in range(self.ui.comboBoxBrand_1.count()):
+                item = self.ui.comboBoxBrand_1.itemText(i).lower()
+                if car["details"]["brand"].split()[0].lower() == item:
+                    index = i
+                    break
+                index = -1
+
             if index == -1:
                 self.tool.warning("Brand not exist")
                 self.comboBoxBrand_1.addItem(car["details"]["brand"].split()[0])
@@ -502,12 +532,18 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             print(f"brand car : An error occurred: {e}")
 
-        print(car["details"]["fuel_type"].split(" ")[0])
+        print(car["details"]["fuel_type"])
         try:
-            index = self.ui.comboBoxFuel_1.findText(car["details"]["fuel_type"].split(" ")[0])
+            for i in range(self.ui.comboBoxFuel_1.count()):
+                item = self.ui.comboBoxFuel_1.itemText(i).lower()
+                if car["details"]["fuel_type"].lower() == item:
+                    index = i
+                    break
+                index = -1
+            print(index)
             if index == -1:
                 self.tool.warning("Fuel type not exist")
-                self.comboBoxFuel_1.addItem(car["details"]["fuel_type"].split()[0])
+                self.comboBoxFuel_1.addItem(car["details"]["fuel_type"])
                 self.comboBoxFuel_1.setItemData(self.comboBoxBrand_1.count() - 1, None)
                 self.ui.comboBoxFuel_1.setCurrentIndex(self.comboBoxFuel_1.count() - 1)
             else:
@@ -517,11 +553,17 @@ class MainWindow(QtWidgets.QMainWindow):
             print(f"fuel type : An error occurred: {e}")
 
         try:
-            print(car["details"]["gearbox"].split(" ")[0])
-            if car["details"]["gearbox"] is not None and car["details"]["gearbox"].split(" ")[0] != "":
-                gearbox = car["details"]["gearbox"].split(" ")[0]
-                index = self.ui.comboBoxGear_1.findText(gearbox)
-                if index != 1:
+            print(car["details"]["gearbox"])
+            if car["details"]["gearbox"] is not None and car["details"]["gearbox"] != "":
+                gearbox = car["details"]["gearbox"]
+                for i in range(self.ui.comboBoxGear_1.count()):
+                    item = self.ui.comboBoxGear_1.itemText(i).lower()
+                    if gearbox.lower() == item:
+                        index = i
+                        break
+                    index = -1
+                print("gear :",index)
+                if index != -1:
                     self.ui.comboBoxGear_1.setCurrentIndex(index)
         except Exception as e:
             print(f"gearbox : An error occurred: {e}")
@@ -532,8 +574,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.ui.price.setText(None)
         try:
-            print(car["details"]["power"].split(" ")[0])
-            self.ui.power.setText(car["details"]["power"].split(" ")[0])
+            print(car["details"]["power"])
+            self.ui.power.setText(car["details"]["power"])
         except Exception as e:
             print(f"power : An error occurred: {e}")
 
@@ -670,10 +712,12 @@ class MainWindow(QtWidgets.QMainWindow):
                     print(key)
                 if combo.objectName() == 'comboBoxBrand' or combo.objectName() == 'comboBoxBrand_1':
                     data = self.car.searchByIdBrand(key)
+                    self.ui.search_input.setText("")
                 elif combo.objectName() == 'comboBoxFuel' or combo.objectName() == 'comboBoxFuel_1':
                     # Retrieve data from the database based on the selected item
                     data = self.fuel.searchByIdFuel(key)
                 elif combo.objectName() == 'comboAllBrands':
+                    self.ui.search_input.setText("")
                     #data = self.scraping.getCarsByBrand(value)
                     dd = self.tool.fill_combobox(self.ui.comboAllModels, value)
                     #self.displayModels(data)
