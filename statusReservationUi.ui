@@ -52,7 +52,7 @@ height: 40px;</string>
      <string>Annuler la reservation</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="monsieurLab">
     <property name="geometry">
      <rect>
       <x>20</x>
