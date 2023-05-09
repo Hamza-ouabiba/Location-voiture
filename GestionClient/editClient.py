@@ -116,18 +116,19 @@ class EditClient(QtWidgets.QMainWindow):
                     dure_permis = datetime.now().date() - datetime.strptime(widget.text(), '%d/%m/%Y').date()
                     if ((dure_permis.days) / 365 < 2):
                         flag = False
-                        print("azbiiiii rah duree permis est inférieur a 2 ans : ")
+                        self.client.warning("duree permis est inférieur a 2 ans : ")
 
                 elif isinstance(widget, QtWidgets.QLabel):
                     if widget.objectName() == "image_label_cli":
                         if widget.pixmap() is None:
-                            print("image n'est pas définie")
+                            self.client.warning("image n'est pas définie")
                             flag = False
 
             if (flag and flagChecks):
+                self.clearAllField()
                 return True
             elif (flag and not flagChecks):
-                print("Checkers must be filled in : ")
+                self.client.warning("veuillez cocher sur l'un des radio buttons : ")
                 return False
             elif (not flag or not flagChecks):
                 return False
@@ -151,3 +152,12 @@ class EditClient(QtWidgets.QMainWindow):
                 self.ui.image_label_cli.adjustSize()
         except Exception as e:
             print(e)
+
+    def clearAllField(self):
+        for widget in self.ui.findChildren(QtWidgets.QWidget):
+            if isinstance(widget, QtWidgets.QLineEdit) and widget.objectName() != "qt_spinbox_lineedit" or isinstance(
+                    widget, QtWidgets.QTextEdit):
+                widget.clear()
+                widget.setStyleSheet("border: 1px solid gray")
+            elif isinstance(widget, QtWidgets.QLabel):
+                widget.clear()

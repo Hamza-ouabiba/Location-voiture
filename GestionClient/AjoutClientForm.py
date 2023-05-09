@@ -109,7 +109,7 @@ class AjoutClient(QtWidgets.QMainWindow):
                 dure_permis  = datetime.now().date() - datetime.strptime(widget.text(), '%d/%m/%Y').date()
                 if((dure_permis.days)/365 < 2):
                     flag = False
-                    self.client.warning("azbiiiii rah duree permis est inférieur a 2 ans : ")
+                    self.client.warning("duree permis est inférieur a 2 ans : ")
 
             elif isinstance(widget,QtWidgets.QLabel):
                 if widget.objectName() == "image_label_cli":
@@ -117,9 +117,18 @@ class AjoutClient(QtWidgets.QMainWindow):
                         self.client.warning("image n'est pas définie")
                         flag = False
         if(flag and flagChecks):
+            self.clearAllField()
             return True
         elif(flag and not flagChecks):
-           print("Checkers must be filled in : ")
+           self.client.warning("Checkers must be filled in : ")
            return False
         elif(not flag or not flagChecks):
             return False
+
+    def clearAllField(self):
+        for widget in self.ui.findChildren(QtWidgets.QWidget):
+            if isinstance(widget, QtWidgets.QLineEdit) and widget.objectName() != "qt_spinbox_lineedit" or isinstance(widget,QtWidgets.QTextEdit):
+                widget.clear()
+                widget.setStyleSheet("border: 1px solid gray")
+            elif isinstance(widget,QtWidgets.QLabel):
+                widget.clear()
