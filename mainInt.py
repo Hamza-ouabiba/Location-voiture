@@ -68,7 +68,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.cars_btn_2.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.page_crud_cars))
         self.ui.scrap_cars_Btn.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.page_scarp_cars))
         self.ui.addCars_page_Btn.clicked.connect(lambda: (self.reset_AddCarpage() , self.ui.stackedWidget.setCurrentWidget(self.ui.page_add_car)) )
-
+        self.ui.addCarButton.clicked.connect(lambda: (self.reset_AddCarpage() , self.ui.stackedWidget.setCurrentWidget(self.ui.page_add_car)))
         self.ui.liste_noire_btn.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.page_noire_clients))
 
         self.ui.reserv.clicked.connect(lambda: self.ui.stackedWidget.setCurrentWidget(self.ui.page_reserv))
@@ -161,7 +161,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.tableWidgeModels.clicked.connect(lambda: self.redirect_to_AddCarPage(self.scraping.getCarByModel(self.ui.comboAllBrands.currentText(),self.ui.comboAllModels.currentText())))
             # linking the update button with the update method:
             print("# linking the update button with the update method")
-
             self.ui.add_image_Btn.clicked.connect(self.image_dialog)
             self.ui.search_input.textChanged.connect(self.sync_SearchLine)
             self.ui.all_cars_btn.clicked.connect(lambda : self.displayCars(self.car.getAll()))
