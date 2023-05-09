@@ -18,13 +18,15 @@ class ReservationForm(QtWidgets.QMainWindow):
 
     def setButtons(self):
         reservations = self.reservation.getDict(f"SELECT * from reservation where id_res = '{self.idRes}'")
-        iduser = reservations['idUser']
-        if(reservations[0]['status'] == 1):
+        print(reservations)
+        iduser = reservations[0]['idUser']
+        user = self.client.getDict(f"SELECT nom from client c join utilisateur u on u.idUser=c.idUser where c.iduser = '{iduser}'")
+        self.ui.monsieurLab.setText(self.ui.monsieurLab.text() + f"{user[0]['nom']}")
+        if (reservations[0]['status'] == 1):
             self.ui.confirmer.setEnabled(False)
         else:
             self.client.warning("Cette reservation est encore annuler")
             self.ui.confirmer.setEnabled(True)
-
     def confirmerBtn(self):
         try:
             details_status_res = dict()

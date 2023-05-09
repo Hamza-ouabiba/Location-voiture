@@ -179,3 +179,15 @@ class Client:
                 combo.setItemData(combo.count() - 1, key)
         except Exception as e:
             print(e)
+
+    def getDict(self,req):
+        if(self.connexion.connect()):
+            self.connexion.cursor.execute(req)
+            columns = [desc[0] for desc in self.connexion.cursor.description]
+
+            results = self.connexion.cursor.fetchall()
+            res = []
+            for row in results:
+                res.append(dict(zip(columns, row)))
+            return res
+
