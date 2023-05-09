@@ -513,92 +513,96 @@ class MainWindow(QtWidgets.QMainWindow):
     def fill_AddCarPage_json(self, car):
         try:
             self.add_DataJson = True
-            print(car["details"]["brand"].split(" ")[0])
+            index = -1
+            print(self.ui.comboAllBrands.currentText())
 
             for i in range(self.ui.comboBoxBrand_1.count()):
                 item = self.ui.comboBoxBrand_1.itemText(i).lower()
-                if car["details"]["brand"].split()[0].lower() == item:
+                if self.ui.comboAllBrands.currentText().lower() == item:
                     index = i
                     break
-                index = -1
-
             if index == -1:
                 self.tool.warning("Brand not exist")
-                self.comboBoxBrand_1.addItem(car["details"]["brand"].split()[0])
+                self.comboBoxBrand_1.addItem(self.ui.comboAllBrands.currentText())
                 self.comboBoxBrand_1.setItemData(self.comboBoxBrand_1.count() - 1, None)
                 self.ui.comboBoxBrand_1.setCurrentIndex(self.comboBoxBrand_1.count() - 1)
-            else:
+            elif index != -1:
                 self.ui.comboBoxBrand_1.setCurrentIndex(index)
         except Exception as e:
             print(f"brand car : An error occurred: {e}")
 
-        print(car["details"]["fuel_type"])
-        try:
-            for i in range(self.ui.comboBoxFuel_1.count()):
-                item = self.ui.comboBoxFuel_1.itemText(i).lower()
-                if car["details"]["fuel_type"].lower() == item:
-                    index = i
-                    break
-                index = -1
-            print(index)
-            if index == -1:
-                self.tool.warning("Fuel type not exist")
-                self.comboBoxFuel_1.addItem(car["details"]["fuel_type"])
-                self.comboBoxFuel_1.setItemData(self.comboBoxBrand_1.count() - 1, None)
-                self.ui.comboBoxFuel_1.setCurrentIndex(self.comboBoxFuel_1.count() - 1)
-            else:
-                self.ui.comboBoxFuel_1.setCurrentIndex(index)
-
-        except Exception as e:
-            print(f"fuel type : An error occurred: {e}")
-
-        try:
-            print(car["details"]["gearbox"])
-            if car["details"]["gearbox"] is not None and car["details"]["gearbox"] != "":
-                gearbox = car["details"]["gearbox"]
-                for i in range(self.ui.comboBoxGear_1.count()):
-                    item = self.ui.comboBoxGear_1.itemText(i).lower()
-                    if gearbox.lower() == item:
-                        index = i
-                        break
-                    index = -1
-                print("gear :",index)
-                if index != -1:
-                    self.ui.comboBoxGear_1.setCurrentIndex(index)
-        except Exception as e:
-            print(f"gearbox : An error occurred: {e}")
         try:
             self.ui.model.setText(car["model"])
         except Exception as e:
             print(f"model car : An error occurred: {e}")
 
-        self.ui.price.setText(None)
-        try:
-            print(car["details"]["power"])
-            self.ui.power.setText(car["details"]["power"])
-        except Exception as e:
-            print(f"power : An error occurred: {e}")
+        if car["details"] is not None :
 
-        try:
-            print(car["details"]["doors"])
-            self.ui.doors.setValue(int(car["details"]["doors"]))
-        except Exception as e:
-            print(f"doors : An error occurred: {e}")
+            try:
+                print(car["details"]["fuel_type"])
+                index = -1
+                for i in range(self.ui.comboBoxFuel_1.count()):
+                    item = self.ui.comboBoxFuel_1.itemText(i).lower()
+                    if car["details"]["fuel_type"].lower() == item:
+                        index = i
+                        break
 
-        try:
-            print(car["details"]["seats"])
-            self.ui.seats.setText(car["details"]["seats"])
-        except Exception as e:
-            print(f"SEATS : An error occurred: {e}")
+                print(index)
+                if index == -1:
+                    self.tool.warning("Fuel type not exist")
+                    self.comboBoxFuel_1.addItem(car["details"]["fuel_type"])
+                    self.comboBoxFuel_1.setItemData(self.comboBoxBrand_1.count() - 1, None)
+                    self.ui.comboBoxFuel_1.setCurrentIndex(self.comboBoxFuel_1.count() - 1)
+                else:
+                    self.ui.comboBoxFuel_1.setCurrentIndex(index)
 
-        try:
-            # Create a new QDate object with the desired date
-            print(car["details"]["start_of_production"].split(" ")[0])
-            new_date = QDate(int(car["details"]["start_of_production"].split(" ")[0]), 1, 1)
-            # Set the date of the QDateEdit widget to the new date
-            self.ui.production_date.setDate(new_date)
-        except Exception as e:
-            print(f"date : An error occurred: {e}")
+            except Exception as e:
+                print(f"fuel type : An error occurred: {e}")
+
+            try:
+                print(car["details"]["gearbox"])
+                if car["details"]["gearbox"] is not None and car["details"]["gearbox"] != "":
+                    gearbox = car["details"]["gearbox"]
+                    for i in range(self.ui.comboBoxGear_1.count()):
+                        item = self.ui.comboBoxGear_1.itemText(i).lower()
+                        if gearbox.lower() == item:
+                            index = i
+                            break
+                        index = -1
+                    print("gear :",index)
+                    if index != -1:
+                        self.ui.comboBoxGear_1.setCurrentIndex(index)
+            except Exception as e:
+                print(f"gearbox : An error occurred: {e}")
+
+
+            self.ui.price.setText(None)
+            try:
+                print(car["details"]["power"])
+                self.ui.power.setText(car["details"]["power"])
+            except Exception as e:
+                print(f"power : An error occurred: {e}")
+
+            try:
+                print(car["details"]["doors"])
+                self.ui.doors.setValue(int(car["details"]["doors"]))
+            except Exception as e:
+                print(f"doors : An error occurred: {e}")
+
+            try:
+                print(car["details"]["seats"])
+                self.ui.seats.setText(car["details"]["seats"])
+            except Exception as e:
+                print(f"SEATS : An error occurred: {e}")
+
+            try:
+                # Create a new QDate object with the desired date
+                print(car["details"]["start_of_production"].split(" ")[0])
+                new_date = QDate(int(car["details"]["start_of_production"].split(" ")[0]), 1, 1)
+                # Set the date of the QDateEdit widget to the new date
+                self.ui.production_date.setDate(new_date)
+            except Exception as e:
+                print(f"date : An error occurred: {e}")
 
         try:
             # Get the image from the URL and convert it to a QPixmap object
