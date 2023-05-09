@@ -155,9 +155,7 @@ class tool:
             row = index.row()
             if "tableWidgeModels" == table.objectName():
                 column = index.column()
-                print(column)
-                if table.horizontalHeaderItem(column).text() == "Add":
-                    return table.item(row, 1)
+                return table.item(row, 1).text()
             else :
                 idCar = int(table.item(row, 1).text())
                 column = index.column()
