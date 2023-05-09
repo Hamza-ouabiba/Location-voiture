@@ -290,7 +290,7 @@
          <item>
           <widget class="QPushButton" name="cars_btn">
            <property name="text">
-            <string>Gestion voiture</string>
+            <string>Car management</string>
            </property>
            <property name="icon">
             <iconset resource="resource.qrc">
@@ -314,14 +314,14 @@
          <item>
           <widget class="QPushButton" name="addCars_page_Btn">
            <property name="text">
-            <string>Ajouter Voiture</string>
+            <string>Add Car</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="scrap_cars_Btn">
            <property name="text">
-            <string>List des Voitures</string>
+            <string>Scarping Cars</string>
            </property>
           </widget>
          </item>
@@ -779,7 +779,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>8</number>
+          <number>6</number>
          </property>
          <widget class="QWidget" name="home">
           <layout class="QGridLayout" name="gridLayout_2">
@@ -938,29 +938,6 @@ border: 2px solid red;</string>
                    <enum>QFrame::Raised</enum>
                   </property>
                   <layout class="QGridLayout" name="gridLayout_38">
-                   <item row="0" column="1">
-                    <widget class="QLabel" name="image_label_car">
-                     <property name="font">
-                      <font>
-                       <family>Georgia</family>
-                       <pointsize>-1</pointsize>
-                       <weight>50</weight>
-                       <italic>false</italic>
-                       <bold>false</bold>
-                      </font>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">color:black;
-border: 2px solid rgb(100,100,100);
- 
-font: 30px &quot;Georgia&quot;;
-</string>
-                     </property>
-                     <property name="text">
-                      <string>Uploader une image </string>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="0" column="0" rowspan="3">
                     <layout class="QGridLayout" name="gridLayout_30">
                      <item row="7" column="0">
@@ -971,7 +948,7 @@ border: 0;
 border-bottom: 1px solid rgb(100,100,100)</string>
                        </property>
                        <property name="placeholderText">
-                        <string> Nombre de places</string>
+                        <string>Seats</string>
                        </property>
                       </widget>
                      </item>
@@ -1024,7 +1001,7 @@ border: 0;
 border-bottom: 1px solid rgb(100,100,100)</string>
                        </property>
                        <property name="placeholderText">
-                        <string> Prix</string>
+                        <string> Price</string>
                        </property>
                       </widget>
                      </item>
@@ -1039,7 +1016,7 @@ border-bottom: 1px solid rgb(100,100,100)</string>
                         <string/>
                        </property>
                        <property name="placeholderText">
-                        <string> Puissance</string>
+                        <string> Power</string>
                        </property>
                       </widget>
                      </item>
@@ -1058,7 +1035,7 @@ border: 0;
 border-bottom: 1px solid rgb(100,100,100)</string>
                        </property>
                        <property name="placeholderText">
-                        <string>  model</string>
+                        <string>  Model</string>
                        </property>
                       </widget>
                      </item>
@@ -1078,6 +1055,29 @@ border-bottom: 1px solid rgb(100,100,100)</string>
                      </item>
                     </layout>
                    </item>
+                   <item row="0" column="1">
+                    <widget class="QLabel" name="image_label_car">
+                     <property name="font">
+                      <font>
+                       <family>Georgia</family>
+                       <pointsize>-1</pointsize>
+                       <weight>50</weight>
+                       <italic>false</italic>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">color:black;
+border: 2px solid rgb(100,100,100);
+ 
+font: 30px &quot;Georgia&quot;;
+</string>
+                     </property>
+                     <property name="text">
+                      <string>Upload  image </string>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="1" column="1">
                     <widget class="QPushButton" name="add_image_Btn">
                      <property name="styleSheet">
@@ -1088,7 +1088,7 @@ height: 25px;
 padding: 10px;</string>
                      </property>
                      <property name="text">
-                      <string>Ajouter une image</string>
+                      <string>Add an image</string>
                      </property>
                     </widget>
                    </item>
@@ -1105,7 +1105,7 @@ height: 25px;
 padding: 10px;</string>
                   </property>
                   <property name="text">
-                   <string>ajouter</string>
+                   <string>Add</string>
                   </property>
                  </widget>
                 </item>
@@ -1120,7 +1120,7 @@ border-radius: 4px;
 height: 50px;</string>
                   </property>
                   <property name="text">
-                   <string>Annuler</string>
+                   <string>Cancel</string>
                   </property>
                  </widget>
                 </item>
@@ -1204,7 +1204,7 @@ color: black;
 border: 0;height: 40px;</string>
                     </property>
                     <property name="text">
-                     <string>Liste des Voiture</string>
+                     <string>Refresh</string>
                     </property>
                     <property name="flat">
                      <bool>false</bool>
@@ -1219,7 +1219,7 @@ border: 0;
 background-color: green;</string>
                     </property>
                     <property name="text">
-                     <string>Ajouter Voiture</string>
+                     <string>Add Car</string>
                     </property>
                    </widget>
                   </item>
@@ -1230,7 +1230,7 @@ background-color: green;</string>
               <item row="1" column="0">
                <widget class="QLabel" name="label_8">
                 <property name="text">
-                 <string>Gestion Voiture</string>
+                 <string>Manage Cars</string>
                 </property>
                </widget>
               </item>
@@ -1278,7 +1278,7 @@ background-color: green;</string>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QPushButton" name="reservation_client_btn">
+                      <widget class="QPushButton" name="refresh_clt">
                        <property name="enabled">
                         <bool>true</bool>
                        </property>
@@ -1291,7 +1291,7 @@ color: black;
 border: 0;height: 40px;</string>
                        </property>
                        <property name="text">
-                        <string>Liste de reservation</string>
+                        <string>Actualiser</string>
                        </property>
                        <property name="flat">
                         <bool>false</bool>
@@ -1545,6 +1545,18 @@ border: 0;height: 40px;</string>
                       </widget>
                      </item>
                      <item>
+                      <widget class="QPushButton" name="all_res_btn">
+                       <property name="styleSheet">
+                        <string notr="true">background-color: blue;
+color: white;
+border: 0;height: 40px;</string>
+                       </property>
+                       <property name="text">
+                        <string>Refresh</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
                       <widget class="QPushButton" name="supprimer_reser">
                        <property name="styleSheet">
                         <string notr="true">background-color: red;
@@ -1637,38 +1649,6 @@ border: 0;height: 40px;</string>
    </hints>
   </connection>
   <connection>
-   <sender>home_btn_2</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>home_Btn</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>27</x>
-     <y>69</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>72</x>
-     <y>76</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>dashborad_btn_2</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>dashborad_btn</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>33</x>
-     <y>100</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>67</x>
-     <y>99</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>users_btn_2</sender>
    <signal>toggled(bool)</signal>
    <receiver>users_btn</receiver>
@@ -1713,38 +1693,6 @@ border: 0;height: 40px;</string>
     <hint type="destinationlabel">
      <x>67</x>
      <y>172</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>home_Btn</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>home_btn_2</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>70</x>
-     <y>63</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>41</x>
-     <y>60</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>dashborad_btn</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>dashborad_btn_2</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>160</x>
-     <y>99</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>26</x>
-     <y>90</y>
     </hint>
    </hints>
   </connection>
@@ -1825,6 +1773,70 @@ border: 0;height: 40px;</string>
     <hint type="destinationlabel">
      <x>47</x>
      <y>626</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>home_Btn</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>home_btn_2</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>63</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>41</x>
+     <y>60</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>home_btn_2</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>home_Btn</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>27</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>72</x>
+     <y>76</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dashborad_btn</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>dashborad_btn_2</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>160</x>
+     <y>99</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>26</x>
+     <y>90</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dashborad_btn_2</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>dashborad_btn</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>33</x>
+     <y>100</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>67</x>
+     <y>99</y>
     </hint>
    </hints>
   </connection>

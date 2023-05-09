@@ -119,7 +119,7 @@ class tool:
             # User clicked OK, handle the event
             pass
     def fill_combobox(self,combo,brand=None):
-        print(1)
+
         try:
             combo.clear()
             data = dict()
@@ -134,12 +134,15 @@ class tool:
                 combo.addItem('Select Fuel')
                 data = self.fuel.getFuel()
             elif combo.objectName() == 'comboAllBrands':
+                print("combo.addItem('Select Brand')")
                 combo.addItem('Select Brand')
+                print("combo.addItem('Select Brand')")
                 data = self.scraping.getCarBrandAll()
 
             elif combo.objectName() == 'comboAllModels' and brand is not None:
                 combo.addItem('Select Model')
                 data = self.scraping.getCarModelsByBrand(brand)
+            print(data)
             for key, value in data.items():
                 combo.addItem(value)
                 combo.setItemData(combo.count() - 1, key)
@@ -150,18 +153,29 @@ class tool:
     def handlClick(self, index: QtCore.QModelIndex, table):
         try:
             row = index.row()
-            if table.objectName()=="tableWidgeModels":
-                return table.item(row, 1)
-            else :
-                idCar = table.item(row, 1)
+            if "tableWidgeModels" == table.objectName():
                 column = index.column()
+                print(column)
+                if table.horizontalHeaderItem(column).text() == "Add":
+                    return table.item(row, 1)
+            else :
+                idCar = int(table.item(row, 1).text())
+                column = index.column()
+                print(column)
                 if table.horizontalHeaderItem(column).text() == "Delete":
-                    self.car.delete(int(idCar.text()))
-                    table.removeRow(row)
-                    return None
-                else:
+                    # Ask the user to confirm before deleting:
+                    confirm = QMessageBox.question(None,"Confirmation","Are you sure you want to delete this car?", QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
+                    if confirm == QMessageBox.Yes:
+                        self.car.delete(idCar)
+                        table.removeRow(row)
+                        self.warning(f"Car id :{idCar} has been deleted")
+                    else:
+                        return None
+                elif table.horizontalHeaderItem(column).text() == "Edit":
                     # Edit Car:
-                    return int(idCar.text())
+                    return idCar
 
+            return
         except Exception as e:
             print(f"handlClick: {e}")
+            return

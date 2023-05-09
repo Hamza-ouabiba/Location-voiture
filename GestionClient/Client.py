@@ -9,21 +9,27 @@ class Client:
     def __init__(self):
         self.connexion = conn.Connexion(host="localhost", username="root", password="", database="Location_voiture")
 
-    def getClientsData(self,request):
-        if(self.connexion.connect()):
+    def getClientsData(self, request):
+        try:
+            if (self.connexion.connect()):
+                req = request
+                self.connexion.cursor.execute(req)
+                users = self.connexion.cursor.fetchall()
+                return users
+        except Exception as e:
+            print(e)
+
+    def getValuePairDataClient(self,request):
+        try:
+            vp = dict()
             req = request
             self.connexion.cursor.execute(req)
             users = self.connexion.cursor.fetchall()
-            return users
-
-    def getValuePairDataClient(self,request):
-        vp = dict()
-        req = request
-        self.connexion.cursor.execute(req)
-        users = self.connexion.cursor.fetchall()
-        for user in users:
-            vp[user[0]] = user[1]
-        return vp
+            for user in users:
+                vp[user[0]] = user[1]
+            return vp
+        except Exception as e:
+            print(e)
 
     def updateClient(self,client_dict):
         try:
@@ -153,12 +159,15 @@ class Client:
 
 
     def testCin(self,cinClie,idUser):
-        request = f"SELECT cin from client where idUser != '{idUser}'" if idUser != "" else "SELECT cin from client"
-        cins = self.getClientsData(request)
-        for cin in cins:
-            if(cinClie == cin[0]):
-                return True
-        return False
+        try:
+            request = f"SELECT cin from client where idUser != '{idUser}'" if idUser != "" else "SELECT cin from client"
+            cins = self.getClientsData(request)
+            for cin in cins:
+                if (cinClie == cin[0]):
+                    return True
+            return False
+        except Exception as e:
+            print(e)
 
     def fillComboClient(self,combo,request,type):
         try:
