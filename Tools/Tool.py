@@ -1,4 +1,5 @@
 from GestionVoiture import car
+from GestionUsers import user
 from GestionVoiture import brand
 from GestionVoiture import fuel
 from GestionVoiture import transmission
@@ -17,6 +18,7 @@ class tool:
     def __init__(self):
         self.scraping = scraping.scrap()
         self.car = car.Car()
+        self.user = user.User()
         self.brand = brand.Brand()
         self.fuel = fuel.Fuel()
         self.gearBox = transmission.Transmission()
@@ -156,7 +158,26 @@ class tool:
             if "tableWidgeModels" == table.objectName():
                 column = index.column()
                 return table.item(row, 1).text()
-            else :
+            elif "tableWidgetUsers" == table.objectName():
+                idUser = int(table.item(row, 0).text())
+                column = index.column()
+                print(column)
+                print(idUser)
+                if table.horizontalHeaderItem(column).text() == "Delete":
+                    # Ask the user to confirm before deleting:
+                    confirm = QMessageBox.question(None, "Confirmation", "Are you sure you want to delete this user?",
+                                                   QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                    if confirm == QMessageBox.Yes:
+                        self.user.delete(idUser)
+                        table.removeRow(row)
+                        self.warning(f"user id :{idUser} has been deleted")
+                    else:
+                        return None
+                elif table.horizontalHeaderItem(column).text() == "Edit":
+                    # Edit Car:
+                    return idUser
+
+            elif "tableWidgetCar" == table.objectName():
                 idCar = int(table.item(row, 1).text())
                 column = index.column()
                 print(column)
