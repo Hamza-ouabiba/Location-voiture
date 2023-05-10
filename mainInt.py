@@ -3,7 +3,7 @@ import json
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from PyQt5.QtGui import QPixmap, QFont, QIcon
 from datetime import datetime
-
+from PyQt5.QtCore import Qt
 
 sys.path.append("./GestionClient/")
 from GestionClient import Client
@@ -218,19 +218,21 @@ class MainWindow(QtWidgets.QMainWindow):
 
                 try:
                     label = QLabel()
-                    pixmap = QPixmap("../main/icon/edit.png")
+                    pixmap = QPixmap('./icon/edit.png')
                     label.setPixmap(pixmap)
-                    self.ui.tableWidgetUsers.setItem(row_idx, 8, label)
+                    label.setAlignment(Qt.AlignCenter)
+                    self.ui.tableWidgetUsers.setCellWidget(row_idx, 8, label)
 
                     label = QLabel()
-                    pixmap = QPixmap("../main/icon/delete.png")
+                    pixmap = QPixmap("./icon/delete.png")
                     label.setPixmap(pixmap)
-                    self.ui.tableWidgetUsers.setItem(row_idx, 9, label)
+                    label.setAlignment(Qt.AlignCenter)
+                    self.ui.tableWidgetUsers.setCellWidget(row_idx, 9, label)
                 except Exception as e:
                     print(f"display users icons : An error occurred: {e}")
 
                 print(row_idx)
-
+                self.tool.alignItemsCenter(self.ui.tableWidgetUsers)
         except Exception as e:
             print(f"display users : An error occurred: {e}")
     ###############################################################################################################
@@ -678,6 +680,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     label.setScaledContents(True)
                     pixmap = self.tool.getImageLabel(car['image'])  # Get QPixmap from binary data
                     label.setPixmap(pixmap)
+                    label.setAlignment(Qt.AlignCenter)
                     self.ui.tableWidgetCar.setCellWidget(row_idx, 0, label)  # Set the label as the cell widget for the image column
                 except Exception as e:
                     print(f"displayCars displaying image : An error occurred: {e}")
@@ -714,21 +717,21 @@ class MainWindow(QtWidgets.QMainWindow):
                     print(f"doors : An error occurred: {e}")
 
                 try:
-                    # Create a push button for the edit icon
-                    edit_button = QPushButton()
-                    edit_button.setIcon(QIcon('../main/icon/edit.png'))
-                    edit_item = QTableWidgetItem()
-                    edit_item.setData(11, edit_button)
-                    self.ui.tableWidgetCar.setItem(row_idx, 11, edit_item)
+                    label = QLabel()
+                    pixmap = QPixmap('./icon/edit.png')
+                    label.setPixmap(pixmap)
+                    label.setAlignment(Qt.AlignCenter)
+                    self.ui.tableWidgetCar.setCellWidget(row_idx, 11, label)
 
-                    # Create a push button for the delete icon
-                    delete_button = QPushButton()
-                    delete_button.setIcon(QIcon('../main/icon/delete.png'))
-                    delete_item = QTableWidgetItem()
-                    delete_item.setData(12, delete_button)
-                    self.ui.tableWidgetCar.setItem(row_idx, 12, delete_item)
+                    label = QLabel()
+                    pixmap = QPixmap("./icon/delete.png")
+                    label.setPixmap(pixmap)
+                    label.setAlignment(Qt.AlignCenter)
+                    self.ui.tableWidgetCar.setCellWidget(row_idx, 12, label)
                 except Exception as e:
                     print(f"display cars icons : An error occurred: {e}")
+
+                self.tool.alignItemsCenter(self.ui.tableWidgetCar)
 
         except Exception as e:
             print(f"display us : An error occurred: {e}")
@@ -789,11 +792,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def displayModels(self, data):
         try:
+
             self.ui.tableWidgeModels.clearContents()  # Clear the existing data in the table
             self.ui.tableWidgeModels.setColumnCount(
                 9)  # Set the number of columns in the table, including the image column
             self.ui.tableWidgeModels.setHorizontalHeaderLabels(
                 ["Image","Model","Fuel Type","gearbox","Year","Power","Seats","Doors","link","Add"])  # Set the column labels
+            self.ui.tableWidgeModels.setHorizontalHeaderItem(1, QTableWidgetItem("Centered Column"))
+            self.ui.tableWidgeModels.horizontalHeaderItem(1).setTextAlignment(Qt.AlignCenter)
             self.ui.tableWidgeModels.setRowCount(len(data))  # Set the number of rows in the table
             image_urls = []
             try:
@@ -813,13 +819,15 @@ class MainWindow(QtWidgets.QMainWindow):
                     label.setScaledContents(True)
                     label.setText("Loading...")
                     label.setPixmap(images[row_idx])
+                    label.setAlignment(Qt.AlignCenter)
                     # Set the label as the cell widget for the image column
                     self.ui.tableWidgeModels.setCellWidget(row_idx, 0,label)
                     self.ui.tableWidgeModels.setItem(row_idx, 1, QTableWidgetItem(str(car["model"])))
 
                     if car["details"] is not None:
                         try:
-                            self.ui.tableWidgeModels.setItem(row_idx, 2, QTableWidgetItem(str(car["details"]["fuel_type"])))
+                            self.ui.tableWidgeModels.setItem(row_idx, 2,QTableWidgetItem(str(car["details"]["fuel_type"])))
+                            self.ui.tableWidgeModels.item(row_idx, 2).setTextAlignment(Qt.AlignCenter)
                             self.ui.tableWidgeModels.setItem(row_idx, 3, QTableWidgetItem(str(car["details"]["gearbox"])))
                             self.ui.tableWidgeModels.setItem(row_idx, 4, QTableWidgetItem(str(car["details"]["start_of_production"])))
                             self.ui.tableWidgeModels.setItem(row_idx, 5, QTableWidgetItem(str(car["details"]["power"])))
@@ -830,11 +838,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
                     self.ui.tableWidgeModels.setItem(row_idx, 8, QTableWidgetItem(str(car["link"])))
                     # Create a push button for the edit icon
-                    edit_button = QPushButton()
-                    edit_button.setIcon(QIcon('./icon/edit.png'))
-                    edit_item = QTableWidgetItem()
-                    edit_item.setData(9, edit_button)
-                    self.ui.tableWidgeModels.setItem(row_idx, 9, edit_item)
+                    label = QLabel()
+                    pixmap = QPixmap('./icon/edit.png')
+                    label.setPixmap(pixmap)
+                    label.setAlignment(Qt.AlignCenter)
+                    self.ui.tableWidgeModels.setCellWidget(row_idx, 9, label)
+
+                    self.tool.alignItemsCenter(self.ui.tableWidgeModels)
                 except Exception as e:
                     print(f"displayModels displaying image : An error occurred: {e}")
         except Exception as e:
