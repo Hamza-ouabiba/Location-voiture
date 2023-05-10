@@ -10,7 +10,8 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5 import QtCore
 from PyQt5.QtGui import QImage
 import numpy as np
-from PyQt5.QtCore import QByteArray, QBuffer
+from PyQt5.QtCore import QByteArray, QBuffer, Qt
+
 
 class tool:
 
@@ -177,3 +178,10 @@ class tool:
         except Exception as e:
             print(f"handlClick: {e}")
             return
+
+    def alignItemsCenter(self,table):
+        for row in range(table.rowCount()):
+            for col in range(table.columnCount()):
+                item = table.item(row, col)
+                if item is not None:
+                    item.setTextAlignment(Qt.AlignCenter)

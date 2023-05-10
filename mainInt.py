@@ -3,7 +3,7 @@ import json
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from PyQt5.QtGui import QPixmap, QFont, QIcon
 from datetime import datetime
-
+from PyQt5.QtCore import Qt
 
 sys.path.append("./GestionClient/")
 from GestionClient import Client
@@ -11,6 +11,11 @@ from GestionClient import editClient as ec
 from GestionClient import AjoutClientForm as af
 from GestionClient import Reservation
 from GestionClient import ReservationForm
+
+sys.path.append("./GestionUsers/")
+from GestionUsers import AddEmpForm as ap
+from GestionUsers import user
+
 sys.path.append("./GestionVoiture/")
 from GestionVoiture import car
 from GestionVoiture import fuel
@@ -122,7 +127,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.comboBoxReservation.addItem("Select reservation")
         self.ui.all_res_btn.clicked.connect(lambda: self.reservation.displayReservations(self.ui.reservation_data))
         self.ui.comboBoxReservation.currentIndexChanged.connect(lambda: self.reservation.searchByReservation(self.ui.comboBoxReservation,self.ui.reservation_data,self.ui.comboClients_4.currentData()))
-     ########################################### Car Section ##########################################################
+
+    ########################################### Users section ##########################################################
+        try:
+            self.user = user.User()
+            self.ui.addEmpBtn.clicked.connect(self.AddEmp)
+            users = self.user.getSuperUserAll()
+            self.displayUsers(users)
+
+            self.ui.tableWidgetUsers.clicked.connect(lambda: self.tool.handlClick(self.ui.tableWidgetUsers.currentIndex(),self.ui.tableWidgetUsers))
+
+        except Exception as e:
+            print(e)
+
+        ########################################### Car Section ##########################################################
         try:
             self.dict_brands = dict()
             self.dict_Allbrands = dict()
@@ -132,7 +150,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.imagePath = ""
             self.id_SelectedCar = None
             self.add_DataJson = False
-
 
             self.scraping = scraping.scrap()
             self.car = car.Car()
@@ -172,6 +189,52 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             print(e)
 
+    ##################################################Add Users#########################################################"
+
+    def AddEmp(self):
+        try:
+            addemp = ap.AddEmp()
+            addemp.show()
+        except Exception as e:
+            print(e)
+
+    def displayUsers(self, data):
+        try:
+            self.ui.tableWidgetUsers.clearContents()  # Clear the existing data in the table
+            self.ui.tableWidgetUsers.setColumnCount(10)  # Set the number of columns in the table, including the image column
+
+            self.ui.tableWidgetUsers.setHorizontalHeaderLabels(["idUser","cin","nom", "prenom", "login","admin","address","salary","Edit","Delete"])  # Set the column labels
+            self.ui.tableWidgetUsers.setRowCount(len(data))  # Set the number of rows in the table
+            print("display users data : ",data)
+            for row_idx, user in enumerate(data):
+                self.ui.tableWidgetUsers.setItem(row_idx, 0, QTableWidgetItem(str(user['idUser'])))
+                self.ui.tableWidgetUsers.setItem(row_idx, 1, QTableWidgetItem(str(user['cin'])))
+                self.ui.tableWidgetUsers.setItem(row_idx, 2, QTableWidgetItem(str(user['nom'])))
+                self.ui.tableWidgetUsers.setItem(row_idx, 3, QTableWidgetItem(str(user['prenom'])))
+                self.ui.tableWidgetUsers.setItem(row_idx, 4, QTableWidgetItem(str(user['login'])))
+                self.ui.tableWidgetUsers.setItem(row_idx, 5, QTableWidgetItem(str(user['admin'])))
+                self.ui.tableWidgetUsers.setItem(row_idx, 6, QTableWidgetItem(str(user['address'])))
+                self.ui.tableWidgetUsers.setItem(row_idx, 7, QTableWidgetItem(str(user['salary'])))
+
+                try:
+                    label = QLabel()
+                    pixmap = QPixmap('./icon/edit.png')
+                    label.setPixmap(pixmap)
+                    label.setAlignment(Qt.AlignCenter)
+                    self.ui.tableWidgetUsers.setCellWidget(row_idx, 8, label)
+
+                    label = QLabel()
+                    pixmap = QPixmap("./icon/delete.png")
+                    label.setPixmap(pixmap)
+                    label.setAlignment(Qt.AlignCenter)
+                    self.ui.tableWidgetUsers.setCellWidget(row_idx, 9, label)
+                except Exception as e:
+                    print(f"display users icons : An error occurred: {e}")
+
+                print(row_idx)
+                self.tool.alignItemsCenter(self.ui.tableWidgetUsers)
+        except Exception as e:
+            print(f"display users : An error occurred: {e}")
     ###############################################################################################################
 
     def AjouterClient(self):
@@ -180,6 +243,7 @@ class MainWindow(QtWidgets.QMainWindow):
             ajout_client.show()
         except Exception as e:
             print(e)
+
 
     def selectReservationClient(self):
             if (bool(self.client_dict) == True):
@@ -374,11 +438,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 except Exception as e:
                     print(f"self.add_DataJson or self.id_SelectedCar  : An error occurred: {e}")
 
-                print("brand",brand)
+
                 idBrand = self.brand.getIdByBrand(self.ui.comboBoxBrand_1.currentText())
                 production_date = self.ui.production_date.date().toString("dd-MM-yyyy")
                 production_date = datetime.strptime(production_date, "%d-%m-%Y").date()
-                print("idbrand : ",idBrand)
+
                 try:
                     if idBrand == []:
                         self.brand.addBrand(self.ui.comboBoxBrand_1.currentText())
@@ -401,7 +465,6 @@ class MainWindow(QtWidgets.QMainWindow):
                             QMessageBox.Yes | QMessageBox.No,
                             QMessageBox.No
                         )
-                        print("idBrand : ",idBrand)
                         if confirm == QMessageBox.Yes:
                             self.car.update(int(self.id_SelectedCar), int(idBrand), model, int(fuel), img, int(gearbox),
                                             float(self.ui.price.text()), float(self.ui.power.text()),
@@ -421,8 +484,7 @@ class MainWindow(QtWidgets.QMainWindow):
                             QMessageBox.No
                         )
                         if confirm == QMessageBox.Yes:
-                            print("gear : ", gearbox)
-                            print("idBrand",idBrand)
+
                             self.car.add(int(idBrand), model, int(fuel), img, int(gearbox), float(self.ui.price.text()),
                                          float(self.ui.power.text()), int(self.ui.seats.text()),
                                          int(self.ui.doors.value()),
@@ -451,7 +513,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def edit_Car(self,idCar):
         try:
-            print("edit car:",idCar)
             if idCar is not None :
                 self.id_SelectedCar = idCar
                 self.fill_AddCarPage_database(idCar)
@@ -465,7 +526,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def redirect_to_AddCarPage(self):
         try:
             model = self.tool.handlClick(self.ui.tableWidgeModels.currentIndex(),self.ui.tableWidgeModels)
-            print(model)
+
             brandIndex = self.ui.comboAllBrands.currentText()
             data = self.scraping.getCarByModel(brandIndex,model)
             self.fill_AddCarPage_json(data[0])
@@ -514,7 +575,6 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             self.add_DataJson = True
             index = -1
-            print(self.ui.comboAllBrands.currentText())
 
             for i in range(self.ui.comboBoxBrand_1.count()):
                 item = self.ui.comboBoxBrand_1.itemText(i).lower()
@@ -539,15 +599,12 @@ class MainWindow(QtWidgets.QMainWindow):
         if car["details"] is not None :
 
             try:
-                print(car["details"]["fuel_type"])
                 index = -1
                 for i in range(self.ui.comboBoxFuel_1.count()):
                     item = self.ui.comboBoxFuel_1.itemText(i).lower()
                     if car["details"]["fuel_type"].lower() == item:
                         index = i
                         break
-
-                print(index)
                 if index == -1:
                     self.tool.warning("Fuel type not exist")
                     self.comboBoxFuel_1.addItem(car["details"]["fuel_type"])
@@ -560,7 +617,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 print(f"fuel type : An error occurred: {e}")
 
             try:
-                print(car["details"]["gearbox"])
                 if car["details"]["gearbox"] is not None and car["details"]["gearbox"] != "":
                     gearbox = car["details"]["gearbox"]
                     for i in range(self.ui.comboBoxGear_1.count()):
@@ -569,7 +625,6 @@ class MainWindow(QtWidgets.QMainWindow):
                             index = i
                             break
                         index = -1
-                    print("gear :",index)
                     if index != -1:
                         self.ui.comboBoxGear_1.setCurrentIndex(index)
             except Exception as e:
@@ -578,26 +633,22 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self.ui.price.setText(None)
             try:
-                print(car["details"]["power"])
                 self.ui.power.setText(car["details"]["power"])
             except Exception as e:
                 print(f"power : An error occurred: {e}")
 
             try:
-                print(car["details"]["doors"])
                 self.ui.doors.setValue(int(car["details"]["doors"]))
             except Exception as e:
                 print(f"doors : An error occurred: {e}")
 
             try:
-                print(car["details"]["seats"])
                 self.ui.seats.setText(car["details"]["seats"])
             except Exception as e:
                 print(f"SEATS : An error occurred: {e}")
 
             try:
                 # Create a new QDate object with the desired date
-                print(car["details"]["start_of_production"].split(" ")[0])
                 new_date = QDate(int(car["details"]["start_of_production"].split(" ")[0]), 1, 1)
                 # Set the date of the QDateEdit widget to the new date
                 self.ui.production_date.setDate(new_date)
@@ -629,6 +680,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     label.setScaledContents(True)
                     pixmap = self.tool.getImageLabel(car['image'])  # Get QPixmap from binary data
                     label.setPixmap(pixmap)
+                    label.setAlignment(Qt.AlignCenter)
                     self.ui.tableWidgetCar.setCellWidget(row_idx, 0, label)  # Set the label as the cell widget for the image column
                 except Exception as e:
                     print(f"displayCars displaying image : An error occurred: {e}")
@@ -665,24 +717,24 @@ class MainWindow(QtWidgets.QMainWindow):
                     print(f"doors : An error occurred: {e}")
 
                 try:
-                    # Create a push button for the edit icon
-                    edit_button = QPushButton()
-                    edit_button.setIcon(QIcon('./icon/edit.png'))
-                    edit_item = QTableWidgetItem()
-                    edit_item.setData(11, edit_button)
-                    self.ui.tableWidgetCar.setItem(row_idx, 11, edit_item)
+                    label = QLabel()
+                    pixmap = QPixmap('./icon/edit.png')
+                    label.setPixmap(pixmap)
+                    label.setAlignment(Qt.AlignCenter)
+                    self.ui.tableWidgetCar.setCellWidget(row_idx, 11, label)
 
-                    # Create a push button for the delete icon
-                    delete_button = QPushButton()
-                    delete_button.setIcon(QIcon('./icon/delete.png'))
-                    delete_item = QTableWidgetItem()
-                    delete_item.setData(12, delete_button)
-                    self.ui.tableWidgetCar.setItem(row_idx, 12, delete_item)
+                    label = QLabel()
+                    pixmap = QPixmap("./icon/delete.png")
+                    label.setPixmap(pixmap)
+                    label.setAlignment(Qt.AlignCenter)
+                    self.ui.tableWidgetCar.setCellWidget(row_idx, 12, label)
                 except Exception as e:
                     print(f"display cars icons : An error occurred: {e}")
 
+                self.tool.alignItemsCenter(self.ui.tableWidgetCar)
+
         except Exception as e:
-            print(f"display car : An error occurred: {e}")
+            print(f"display us : An error occurred: {e}")
 
         self.ui.tableWidgetCar.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
@@ -740,11 +792,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def displayModels(self, data):
         try:
+
             self.ui.tableWidgeModels.clearContents()  # Clear the existing data in the table
             self.ui.tableWidgeModels.setColumnCount(
                 9)  # Set the number of columns in the table, including the image column
             self.ui.tableWidgeModels.setHorizontalHeaderLabels(
                 ["Image","Model","Fuel Type","gearbox","Year","Power","Seats","Doors","link","Add"])  # Set the column labels
+            self.ui.tableWidgeModels.setHorizontalHeaderItem(1, QTableWidgetItem("Centered Column"))
+            self.ui.tableWidgeModels.horizontalHeaderItem(1).setTextAlignment(Qt.AlignCenter)
             self.ui.tableWidgeModels.setRowCount(len(data))  # Set the number of rows in the table
             image_urls = []
             try:
@@ -764,13 +819,15 @@ class MainWindow(QtWidgets.QMainWindow):
                     label.setScaledContents(True)
                     label.setText("Loading...")
                     label.setPixmap(images[row_idx])
+                    label.setAlignment(Qt.AlignCenter)
                     # Set the label as the cell widget for the image column
                     self.ui.tableWidgeModels.setCellWidget(row_idx, 0,label)
                     self.ui.tableWidgeModels.setItem(row_idx, 1, QTableWidgetItem(str(car["model"])))
 
                     if car["details"] is not None:
                         try:
-                            self.ui.tableWidgeModels.setItem(row_idx, 2, QTableWidgetItem(str(car["details"]["fuel_type"])))
+                            self.ui.tableWidgeModels.setItem(row_idx, 2,QTableWidgetItem(str(car["details"]["fuel_type"])))
+                            self.ui.tableWidgeModels.item(row_idx, 2).setTextAlignment(Qt.AlignCenter)
                             self.ui.tableWidgeModels.setItem(row_idx, 3, QTableWidgetItem(str(car["details"]["gearbox"])))
                             self.ui.tableWidgeModels.setItem(row_idx, 4, QTableWidgetItem(str(car["details"]["start_of_production"])))
                             self.ui.tableWidgeModels.setItem(row_idx, 5, QTableWidgetItem(str(car["details"]["power"])))
@@ -781,11 +838,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
                     self.ui.tableWidgeModels.setItem(row_idx, 8, QTableWidgetItem(str(car["link"])))
                     # Create a push button for the edit icon
-                    edit_button = QPushButton()
-                    edit_button.setIcon(QIcon('./icon/edit.png'))
-                    edit_item = QTableWidgetItem()
-                    edit_item.setData(9, edit_button)
-                    self.ui.tableWidgeModels.setItem(row_idx, 9, edit_item)
+                    label = QLabel()
+                    pixmap = QPixmap('./icon/edit.png')
+                    label.setPixmap(pixmap)
+                    label.setAlignment(Qt.AlignCenter)
+                    self.ui.tableWidgeModels.setCellWidget(row_idx, 9, label)
+
+                    self.tool.alignItemsCenter(self.ui.tableWidgeModels)
                 except Exception as e:
                     print(f"displayModels displaying image : An error occurred: {e}")
         except Exception as e:
