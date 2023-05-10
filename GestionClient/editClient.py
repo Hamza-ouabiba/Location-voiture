@@ -69,6 +69,7 @@ class EditClient(QtWidgets.QMainWindow):
                 self.user_dict['liste_noire'] = 1 if (self.ui.radioOui.isChecked()) else 0
                 self.user_dict['idUser'] = self.idUser
                 pixmap = self.ui.image_label_cli.pixmap()  # Get the pixmap from the label widget
+                print(self.user_dict)
                 if pixmap is not None:
                     byte_array = QByteArray()
                     buffer = QBuffer(byte_array)
@@ -76,12 +77,15 @@ class EditClient(QtWidgets.QMainWindow):
                     pixmap.toImage().save(buffer, 'PNG')
                     self.user_dict['photo'] = byte_array
                     self.client.updateClient(self.user_dict)
+                    self.client.updateUser(self.user_dict)
                     self.client.displayClients(
                         f"select su.idUser,photo,email,login,mdp,adresse,nom,prenom,societe,cin,tel,ville,permis,passport,observation,liste_noire,date_permis from client su join utilisateur u on su.idUser = u.idUser "
                         , self.table)
                     self.client.displayClients(
                         f"select su.idUser,photo,email,login,mdp,adresse,nom,prenom,societe,cin,tel,ville,permis,passport,observation,liste_noire,date_permis from client su join utilisateur u on su.idUser = u.idUser WHERE liste_noire = 1"
                         , self.table_list_no)
+
+
         except Exception as e:
             print(e)
     def verificationFields(self):
@@ -125,7 +129,6 @@ class EditClient(QtWidgets.QMainWindow):
                             flag = False
 
             if (flag and flagChecks):
-                self.clearAllField()
                 return True
             elif (flag and not flagChecks):
                 self.client.warning("veuillez cocher sur l'un des radio buttons : ")
