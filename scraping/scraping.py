@@ -2,14 +2,16 @@ import requests
 import json
 import concurrent.futures
 from PyQt5.QtGui import QPixmap
-from bs4 import BeautifulSoup
 import re
+from bs4 import BeautifulSoup
+
+
 class scrap:
     def __init__(self):
         with open('./Scraping/brands_modelsAll.json') as f:
             self.data = json.load(f)
 
-    def downloadScript(self,url):
+    def dowloadScript(self, url):
         # Send a GET request to the URL and get the response
         response = requests.get(url)
 
@@ -25,7 +27,109 @@ class scrap:
         else:
             print("Failed to download HTML page. Status code:", response.status_code)
 
-    def getCarDataAll(self,url):
+    def extractDetails(self, url):
+        listDetails = ['Brand', 'Generation', 'Seats', 'Doors']
+        details = dict()
+        response = requests.get(url)
+        soup = BeautifulSoup(response.content, "html.parser")
+        car_details = soup.find_all('table', class_='cardetailsout car2')
+        flag = False
+        power = False
+        doors = False
+        brand = False
+        generation = False
+        start = False
+        seats = False
+        for info in car_details:
+            # getting th element to compare it with the list :
+            headers = info.findAll('th')
+            for header in headers:
+
+                if (header.text.strip() == 'Number of gears and type of gearbox'):
+                    flag = True
+                    l = header.next_sibling.text.strip().split(' ')
+                    details['gearbox'] = l[2]
+
+                if (header.text.strip() == 'Start of production'):
+                    l = header.next_sibling.text.strip().split(' ')
+                    attribute = header.text.strip()
+                    attr = '_'.join(attribute.split(' '))
+                    for ls in l:
+                        if (ls.isdigit()):
+                            details[attr.lower()] = ls
+                            break
+
+                if (header.text.strip() == 'Fuel Type'):
+                    fuel = True
+                    l = header.next_sibling.text.strip().split(' ')
+                    attribute = header.text.strip()
+                    attr = '_'.join(attribute.split(' '))
+                    details[attr.lower()] = l[0]
+
+                if header.text.strip() == "Doors":
+                    doors = True
+                    details[header.text.strip().lower()] = header.next_sibling.text.strip()
+
+                if header.text.strip() == "Brand":
+                    brand = True
+                    details[header.text.strip().lower()] = header.next_sibling.text.strip()
+
+                if header.text.strip() == "Generation":
+                    generation = True
+                    details[header.text.strip().lower()] = header.next_sibling.text.strip()
+
+                if (header.text.strip() == 'Start of production'):
+                    start = True
+                    l = header.next_sibling.text.strip().split(' ')
+                    attribute = header.text.strip()
+                    attr = '_'.join(attribute.split(' '))
+                    for ls in l:
+                        if (ls.isdigit()):
+                            details[attr.lower()] = ls
+                            break
+
+                if (header.text.strip() == 'Power'):
+                    power = True
+                    details[header.text.strip().lower()] = header.next_sibling.text.strip()
+
+                if (header.text.strip() == "Seats"):
+                    seats = True
+                    details[header.text.strip().lower()] = header.next_sibling.text.strip()
+
+            if (flag == False):
+                details['gearbox'] = None
+            if (power == False):
+                details['power'] = None
+            if (brand == False):
+                details['brand'] = None
+            if (start == False):
+                details['start_of_production'] = None
+            if (generation == False):
+                details['generation'] = None
+            if (seats == False):
+                details['seats'] = None
+        return details
+
+    def getNecessaryData(self, url):
+        response = requests.get(url)
+        soup = BeautifulSoup(response.content, "html.parser")
+        link_r = ""
+        # Find the table containing the data
+        table = soup.find("table")
+
+        # to get only those who got data on them :
+        if (table is not None):
+            # getting the first link :
+            for row in table.findAll("tr"):
+                links = row.find("a")
+                if (links is not None):
+                    link_r = links
+                    break
+            # enter to that link and get data :
+            details = self.extractDetails("https://www.auto-data.net" + link_r["href"])
+            return details
+
+    def getCarDataAll(self, url):
 
         response = requests.get(url)
         soup = BeautifulSoup(response.content, "html.parser")
@@ -40,57 +144,28 @@ class scrap:
             if len(cells) == 2:
                 link = cells[0].find("a")
                 brand_model = link.text.strip()
+
+                # getting brand and model by splitting
                 brand = brand_model.split()[0]
                 model = " ".join(brand_model.split()[1:])
                 data.setdefault(brand, [])
-                if brand not in data:
-                    data[brand] = []
-                data[brand].append({
-                    "model": model,
-                    "link": link["href"]
-                })
 
-        # Write the data to a JSON file
-        with open("brands_modelsAll.json", "w") as f:
-            json.dump(data, f, indent=4)
-
-    def getCarData(self,url):
-        response = requests.get(url)
-        soup = BeautifulSoup(response.content, "html.parser")
-
-        # Find the table containing the data
-        table = soup.find("table")
-
-        # Extract the data from the table
-        data = {}
-        for row in table.findAll("tr"):
-            cells = row.findAll("td")
-            if len(cells) == 2:
-                link = cells[0].find("a")
-                brand_model = link.text.strip()
-                brand = brand_model.split()[0]
-                model = " ".join(brand_model.split()[1:])
-                if brand not in data:
-                    data[brand] = []
-                # Check if the model is similar to any existing models
-                similar_model = None
-                for d in data[brand]:
-                    if model in d["model"] or d["model"] in model:
-                        similar_model = d
-                        break
-                # If similar model found, update the link
-                if similar_model:
-                    similar_model["link"] = link["href"]
-                else:
+                # getting car details by entering to the link :
+                detailCar = self.getNecessaryData(link["href"])
+                print(detailCar)
+                if (len(data[brand]) < 1):
                     data[brand].append({
                         "model": model,
-                        "link": link["href"]
+                        "link": link["href"],
+                        "details": detailCar,
+                        "images": self.getCarUrlImages(link["href"])
                     })
 
+        # Write the data to a JSON file
+        with open("DataScraped.json", "w") as f:
+            json.dump(data, f, indent=4)
 
-
-
-    def addImageUrl(self,data):
+    def addImageUrl(self, data):
         # Create a new dictionary to store the updated data
         updated_data = {}
         for brand, models in data.items():
@@ -102,7 +177,7 @@ class scrap:
                 print(updated_model["img_url"])
             updated_data[brand] = updated_models
 
-    def getModelImage(self,url):
+    def getModelImage(self, url):
         response = requests.get(url)
         soup = BeautifulSoup(response.content, "html.parser")
 
@@ -115,8 +190,7 @@ class scrap:
             href = link_tag.get("href")
             return href
 
-
-    def get_image_from_url(self,url):
+    def get_image_from_url(self, url):
         try:
             response = requests.get(url)
             pixmap = QPixmap()
@@ -126,8 +200,7 @@ class scrap:
             print(f"Error downloading image: {e}")
             return None
 
-
-    def getCarUrlImages(self,url):
+    def getCarUrlImages(self, url):
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -140,12 +213,18 @@ class scrap:
         # extract the `bigs` data using `re.findall()`
         matches = re.findall(pattern, str(scripts))
         # add prefix to each item in the list using a list comprehension
-        bigs_data = ['https://www.auto-data.net/images/' + item for item in matches]
-
-        # print the `bigs` data
+        bigs_data = list()
+        if (len(matches) > 5):
+            for i in range(5):
+                bigs_data.append('https://www.auto-data.net/images/' + matches[i])
+            print(bigs_data)
+        else:
+            for i in range(len(matches)):
+                bigs_data.append('https://www.auto-data.net/images/' + matches[i])
+            print(bigs_data)
         return bigs_data
 
-    def download_images(self,image_urls):
+    def download_images(self, image_urls):
         total_images = len(image_urls)
         current_image = 0
         images = []
@@ -162,17 +241,22 @@ class scrap:
         print("All images downloaded!")
         return images
 
-    def download_img(self,url):
-        url = self.getModelImage(url)
-        pixmap = self.get_image_from_url(url)
-        return pixmap
+    import concurrent.futures
 
-
-
+    def download_imagesVer2(self, image_urls):
+        images = []
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+            futures = [executor.submit(self.get_image_from_url, url) for url in image_urls]
+            for future in concurrent.futures.as_completed(futures):
+                try:
+                    pixmap = future.result()
+                    if pixmap is not None:
+                        images.append(pixmap)
+                except Exception as e:
+                    print(f"Error downloading image: {e}")
+        return images
 
     #######################################################################################################################
-
-
 
     def getCarBrandAll(self):
 
@@ -195,17 +279,14 @@ class scrap:
 
         return models
 
+    def getCarsByBrand(self, brand_name):
 
-    def getCarByModel(self, brand, model):
-        car_data = self.data.get(brand)
+        car_data = self.data.get(brand_name)
         if car_data is None:
-            print(f"No data found for brand {brand}")
+            print(f"No data found for brand {brand_name}")
             return []
-        matching_cars = []
-        for car in car_data:
-            if car["model"].lower() == model.lower():
-                matching_cars.append(car)
-        return matching_cars
+
+        return car_data
 
     def getCarsByModel(self, brand, model):
         car_data = self.data.get(brand)
@@ -214,24 +295,15 @@ class scrap:
             return []
         matching_cars = []
         for car in car_data:
-            if car["model"].lower() == model.lower():
-                matching_cars.append(car)
-        return matching_cars
-
-    def searchCarsByModel(self, brand, model):
-        car_data = self.data.get(brand)
-        if car_data is None:
-            print(f"No data found for brand {brand}")
-            return []
-        matching_cars = []
-        for car in car_data:
-            if car["model"].lower().startswith(model.lower()):
+            if car["model"] == model:
                 matching_cars.append(car)
         return matching_cars
 
 
 #######################################################################################################################
 
-#getCarImages("https://www.auto-data.net/en/abarth-500c-1.4-t-jet-135hp-42380")
-#getCarDataAll("https://api.auto-data.net/image-database")
-#getCarData("https://api.auto-data.net/image-database")
+# getCarImages("https://www.auto-data.net/en/abarth-500c-1.4-t-jet-135hp-42380")
+# getCarDataAll("https://api.auto-data.net/image-database")
+# getCarData("https://api.auto-data.net/image-database")
+
+
