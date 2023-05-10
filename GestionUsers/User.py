@@ -87,15 +87,5 @@ class User:
 
 
 
-    # Search methods
-    def searchByModel(self,model):
-        req = f"SELECT * FROM voiture WHERE LOWER(model) like '{model.lower()}%'"
-        return self.getDict(req)
-    def searchByIdBrand(self,id_brand):
-        req = f"SELECT * FROM voiture WHERE idMarque = {id_brand}"
-        return self.getDict(req)
 
-    def getCarById(self,id):
-        req = f"SELECT * FROM voiture WHERE idCar = {id}"
-        return self.getDict(req)
 
