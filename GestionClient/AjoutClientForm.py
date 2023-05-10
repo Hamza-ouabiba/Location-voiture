@@ -65,7 +65,7 @@ class AjoutClient(QtWidgets.QMainWindow):
                 self.client.fillComboClient(self.combo,
                                      "SELECT client.idUser,nom from client join utilisateur on client.idUser = utilisateur.idUser",
                                      "client")
-
+                self.clearAllField()
         except Exception as e:
             print(f"An error occurred: {e}")
     def generateRandomPassword(self):
@@ -117,7 +117,6 @@ class AjoutClient(QtWidgets.QMainWindow):
                         self.client.warning("image n'est pas définie")
                         flag = False
         if(flag and flagChecks):
-            self.clearAllField()
             return True
         elif(flag and not flagChecks):
            self.client.warning("Checkers must be filled in : ")
