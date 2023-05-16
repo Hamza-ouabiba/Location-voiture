@@ -18,7 +18,6 @@ class AjoutClient(QtWidgets.QMainWindow):
         self.ui.image_btn.clicked.connect(self.image_dialog)
         self.ui.valider_btn.clicked.connect(self.AddButtonClient)
         self.ui.genererPass.clicked.connect(self.generateRandomPassword)
-
         self.combo = comboBox
     def image_dialog(self):
         try:
