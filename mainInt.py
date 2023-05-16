@@ -29,10 +29,7 @@ sys.path.append("./Tools/")
 from Tools import Convertion
 from Tools import Tool
 from PyQt5.QtCore import QDate
-
-
-from PyQt5.QtWidgets import QTableWidgetItem, QTableWidget, QApplication, QFileDialog, QLabel, QHeaderView, QPushButton, \
-    QMessageBox
+from PyQt5.QtWidgets import QTableWidgetItem, QTableWidget, QApplication, QFileDialog, QLabel, QHeaderView, QMessageBox
 from GestionClient import ReservationClient as rc
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self,login,choix,admin_o_n):
@@ -131,11 +128,12 @@ class MainWindow(QtWidgets.QMainWindow):
     ########################################### Users section ##########################################################
         self.tool = Tool.tool()
         try:
+
             self.user = user.User()
             self.ui.addEmpBtn.clicked.connect(self.AddEmp)
             users = self.user.getSuperUserAll()
-            self.displayUsers(users)
-
+            self.displayUsers(users,self.ui.tableWidgetUsers)
+            self.refresh_users.clicked.connect(lambda: self.displayUsers(users,self.ui.tableWidgetUsers))
             self.ui.tableWidgetUsers.clicked.connect(lambda: self.tool.handlClick(self.ui.tableWidgetUsers.currentIndex(),self.ui.tableWidgetUsers))
 
         except Exception as e:
@@ -199,36 +197,37 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             print(e)
 
-    def displayUsers(self, data):
+    def displayUsers(self, data, table):
         try:
-            self.ui.tableWidgetUsers.clearContents()  # Clear the existing data in the table
-            self.ui.tableWidgetUsers.setColumnCount(10)  # Set the number of columns in the table, including the image column
+            table.clearContents()  # Clear the existing data in the table
+            table.setColumnCount(10)  # Set the number of columns in the table, including the image column
 
-            self.ui.tableWidgetUsers.setHorizontalHeaderLabels(["idUser","cin","nom", "prenom", "login","admin","address","salary","Edit","Delete"])  # Set the column labels
-            self.ui.tableWidgetUsers.setRowCount(len(data))  # Set the number of rows in the table
-            print("display users data : ",data)
+            table.setHorizontalHeaderLabels(
+                ["idUser", "cin", "nom", "prenom", "login", "admin", "address", "salary", "Edit",
+                 "Delete"])  # Set the column labels
+            table.setRowCount(len(data))  # Set the number of rows in the table
+            print("display users data : ", data)
             for row_idx, user in enumerate(data):
-                self.ui.tableWidgetUsers.setItem(row_idx, 0, QTableWidgetItem(str(user['idUser'])))
-                self.ui.tableWidgetUsers.setItem(row_idx, 1, QTableWidgetItem(str(user['cin'])))
-                self.ui.tableWidgetUsers.setItem(row_idx, 2, QTableWidgetItem(str(user['nom'])))
-                self.ui.tableWidgetUsers.setItem(row_idx, 3, QTableWidgetItem(str(user['prenom'])))
-                self.ui.tableWidgetUsers.setItem(row_idx, 4, QTableWidgetItem(str(user['login'])))
-                self.ui.tableWidgetUsers.setItem(row_idx, 5, QTableWidgetItem(str(user['admin'])))
-                self.ui.tableWidgetUsers.setItem(row_idx, 6, QTableWidgetItem(str(user['address'])))
-                self.ui.tableWidgetUsers.setItem(row_idx, 7, QTableWidgetItem(str(user['salary'])))
+                table.setItem(row_idx, 0, QTableWidgetItem(str(user['idUser'])))
+                table.setItem(row_idx, 1, QTableWidgetItem(str(user['cin'])))
+                table.setItem(row_idx, 2, QTableWidgetItem(str(user['nom'])))
+                table.setItem(row_idx, 3, QTableWidgetItem(str(user['prenom'])))
+                table.setItem(row_idx, 4, QTableWidgetItem(str(user['login'])))
+                table.setItem(row_idx, 5, QTableWidgetItem(str(user['admin'])))
+                table.setItem(row_idx, 6, QTableWidgetItem(str(user['address'])))
+                table.setItem(row_idx, 7, QTableWidgetItem(str(user['salary'])))
 
                 try:
                     label = QLabel()
                     pixmap = QPixmap('./icon/edit.png')
                     label.setPixmap(pixmap)
                     label.setAlignment(Qt.AlignCenter)
-                    self.ui.tableWidgetUsers.setCellWidget(row_idx, 8, label)
-
+                    table.setCellWidget(row_idx, 8, label)
                     label = QLabel()
                     pixmap = QPixmap("./icon/delete.png")
                     label.setPixmap(pixmap)
                     label.setAlignment(Qt.AlignCenter)
-                    self.ui.tableWidgetUsers.setCellWidget(row_idx, 9, label)
+                    table.setCellWidget(row_idx, 9, label)
                 except Exception as e:
                     print(f"display users icons : An error occurred: {e}")
 
@@ -236,6 +235,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.tool.alignItemsCenter(self.ui.tableWidgetUsers)
         except Exception as e:
             print(f"display users : An error occurred: {e}")
+
     ###############################################################################################################
 
     def AjouterClient(self):
