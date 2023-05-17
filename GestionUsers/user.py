@@ -72,7 +72,7 @@ class User:
                 self.connexion.cursor.execute(req3, ( employee_dict["idUser"], employee_dict["admin"], employee_dict['address'], employee_dict['cin'],  employee_dict['salary']))
 
                 self.connexion.conn.commit()
-                print("Added successfully")
+                ("Added successfully")
         except Exception as e:
             print(f"addEmployee :Error: {e}")
 
