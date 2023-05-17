@@ -106,11 +106,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.ui.comboClients.currentIndexChanged.connect(lambda: self.searchByComboClient("",self.ui.comboClients,self.ui.clients_data))
         self.ui.comboClients_3.currentIndexChanged.connect(lambda: self.searchByComboClient("yes",self.ui.comboClients_3,self.ui.page_noire_data))
-        self.ui.comboClients_4.currentIndexChanged.connect(
-            lambda: self.reservation.searchByUser(self.ui.reservation_data,self.ui.comboClients_4.currentData(),self.ui.comboBoxReservation))
+        self.ui.comboClients_4.currentIndexChanged.connect(lambda: self.reservation.searchByUser(self.ui.reservation_data,self.ui.comboClients_4.currentData(),self.ui.comboBoxReservation))
         #self.ui.reservation_client_btn.clicked.connect(self.selectReservationClient)
 
-        self.ui.refresh_clt.clicked.connect(lambda: self.client.displayClients(f"select su.idUser,photo,email,login,mdp,adresse,nom,prenom,societe,cin,tel,ville,permis,passport,observation,liste_noire,date_permis from client su join utilisateur u on su.idUser = u.idUser ",self.ui.clients_data))
+        self.ui.refresh_clt.clicked.connect(lambda: self.refreshBtn())
+        self.ui.refresh_btn_liste.clicked.connect(lambda: self.refreshBtn())
 
         self.client.displayClients(f"select su.idUser,photo,email,login,mdp,adresse,nom,prenom,societe,cin,tel,ville,permis,passport,observation,liste_noire,date_permis from client su join utilisateur u on su.idUser = u.idUser ",self.ui.clients_data)
         self.client.displayClients(f"select su.idUser,photo,email,login,mdp,adresse,nom,prenom,societe,cin,tel,ville,permis,passport,observation,liste_noire,date_permis from client su join utilisateur u on su.idUser = u.idUser where liste_noire = '{1}'",self.ui.page_noire_data)
@@ -237,6 +237,22 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             print(f"display users : An error occurred: {e}")
     ###############################################################################################################
+    def refreshBtn(self):
+        try:
+            self.client.displayClients(
+                f"select su.idUser,photo,email,login,mdp,adresse,nom,prenom,societe,cin,tel,ville,permis,passport,observation,liste_noire,date_permis from client su join utilisateur u on su.idUser = u.idUser ",
+                self.ui.clients_data)
+            self.client.displayClients(
+                "select su.idUser,photo,email,login,mdp,adresse,nom,prenom,societe,cin,tel,ville,permis,passport,observation,liste_noire,date_permis from client su join utilisateur u on su.idUser = u.idUser where liste_noire = '1'",
+                self.ui.page_noire_data)
+            self.client.fillComboClient(self.ui.comboClients_3,
+                                 "SELECT client.idUser,nom from client join utilisateur on client.idUser = utilisateur.idUser where liste_noire = 1",
+                                 "client")
+            self.client.fillComboClient(self.ui.comboClients,
+                                 "SELECT client.idUser,nom from client join utilisateur on client.idUser = utilisateur.idUser",
+                                 "client")
+        except Exception as e:
+            print(e)
 
     def AjouterClient(self):
         try:
@@ -278,7 +294,7 @@ class MainWindow(QtWidgets.QMainWindow):
             if (bool(self.client_dict)) == True:
                 if (self.messageBox(
                         "Etes vous sure de le supprimer la suppression de ce client va entrainer la suppression de toutes ces reservations !") == QtWidgets.QMessageBox.Yes):
-                    self.client.supprimer(f"DELETE FROM CLIENT WHERE IDUSER = '{self.client_dict['idUser']}'",self.ui.comboClients)
+                    self.client.supprimer(f"DELETE FROM CLIENT WHERE IDUSER = '{self.client_dict['idUser']}'",self.ui.comboClients_3,self.ui.comboClients)
                     if(liste_noire):
                         self.client.displayClients(
                             f"SELECT su.idUser,photo,email,login,mdp,adresse,nom,prenom,societe,cin,tel,ville,permis,passport,observation,liste_noire,date_permis from client su join utilisateur u on su.idUser = u.idUser where liste_noire = 1",

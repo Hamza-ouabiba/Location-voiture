@@ -779,7 +779,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>3</number>
+          <number>8</number>
          </property>
          <widget class="QWidget" name="home">
           <layout class="QGridLayout" name="gridLayout_2">
@@ -1573,6 +1573,18 @@ border: 0;height: 40px;</string>
                           </property>
                           <property name="text">
                            <string>Supprimer client</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QPushButton" name="refresh_btn_liste">
+                          <property name="styleSheet">
+                           <string notr="true">background-color: blue;
+color: white;
+border: 0;height: 40px;</string>
+                          </property>
+                          <property name="text">
+                           <string>Refresh</string>
                           </property>
                          </widget>
                         </item>
