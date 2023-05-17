@@ -13,7 +13,7 @@ class AddEmp(QtWidgets.QMainWindow):
         self.ui = uic.loadUi("../main/AddEmpForm_ui.ui",self)
         self.ui.genererPass.clicked.connect(self.generateRandomPassword)
         self.ui.valider_btn_emp.clicked.connect(self.AddButtonEmployee)
-        print("EditEmp")
+
 
 
     def AddButtonEmployee(self):
@@ -59,37 +59,14 @@ class AddEmp(QtWidgets.QMainWindow):
                 self.tool.warning("phone")
                 return
 
-            self.addEmployee(employee_dict)
+            self.user.addEmployee(employee_dict)
             #self.tool.warning("user added ")
 
 
         except Exception as e:
             print(f"AddButtonEmployee :Error: {e}")
 
-    def addEmployee(self, employee_dict):
-        try:
-            if self.connexion.connect():
-                # create for the user a login and a password:
-                req1 = f"INSERT INTO utilisateur(`nom`, `prenom`, `login`, `mdp`) " \
-                       f"VALUES ('{employee_dict['nom']}', '{employee_dict['prenom']}', '{employee_dict['login']}', '{employee_dict['mdp']}')"
-                self.connexion.cursor.execute(req1)
 
-                num_rows = self.connexion.cursor.rowcount
-                print("super user")
-                # get the id of the current row:
-                req2 = f"SELECT idUser FROM utilisateur ORDER BY idUser DESC LIMIT {num_rows}"
-                self.connexion.cursor.execute(req2)
-                result = self.connexion.cursor.fetchone()
-                employee_dict["idUser"] = result[0]
-                print("get id",employee_dict["idUser"] )
-                # creating the client:
-                req3 = f"INSERT INTO super_utilisateur(`idUser`, `admin`, `address`, `cin`, `salary`) VALUES (%s,%s,%s,%s,%s)"
-                self.connexion.cursor.execute(req3, ( employee_dict["idUser"], employee_dict["admin"], employee_dict['address'], employee_dict['cin'],  employee_dict['salary']))
-
-                self.connexion.conn.commit()
-                print("Added successfully")
-        except Exception as e:
-            print(f"addEmployee :Error: {e}")
 
 
     def generateRandomPassword(self):

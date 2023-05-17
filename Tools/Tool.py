@@ -1,8 +1,13 @@
+import sys
+sys.path.append("../GestionVoiture/")
 from GestionVoiture import car
-from GestionUsers import user
 from GestionVoiture import brand
 from GestionVoiture import fuel
 from GestionVoiture import transmission
+sys.path.append("../GestionUsers/")
+from GestionUsers import user
+from GestionUsers import EditEmp as ep
+
 from Scraping import scraping
 from PIL import Image
 import base64
@@ -17,12 +22,15 @@ from PyQt5.QtCore import QByteArray, QBuffer, Qt
 class tool:
 
     def __init__(self):
-        self.scraping = scraping.scrap()
-        self.car = car.Car()
-        self.user = user.User()
-        self.brand = brand.Brand()
-        self.fuel = fuel.Fuel()
-        self.gearBox = transmission.Transmission()
+        try:
+            self.scraping = scraping.scrap()
+            self.car = car.Car()
+            self.user = user.User()
+            self.brand = brand.Brand()
+            self.fuel = fuel.Fuel()
+            self.gearBox = transmission.Transmission()
+        except Exception as e:
+            print(e)
     def convertToBinary(self, path):
         try:
             with open(path, "rb") as File:
@@ -175,7 +183,9 @@ class tool:
                     else:
                         return None
                 elif table.horizontalHeaderItem(column).text() == "Edit":
-                    # Edit Car:
+                    # Edit Emp:
+                    editemp = ep.Edit_Emp(int(idUser))
+                    editemp.show()
                     return idUser
 
             elif "tableWidgetCar" == table.objectName():
