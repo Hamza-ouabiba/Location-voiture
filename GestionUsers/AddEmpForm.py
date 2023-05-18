@@ -4,6 +4,9 @@ import sys
 import user
 import string
 import random
+import sys
+sys.path.append("./GestionClient/")
+from GestionClient import Client
 class AddEmp(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -13,8 +16,7 @@ class AddEmp(QtWidgets.QMainWindow):
         self.ui = uic.loadUi("../main/AddEmpForm_ui.ui",self)
         self.ui.genererPass.clicked.connect(self.generateRandomPassword)
         self.ui.valider_btn_emp.clicked.connect(self.AddButtonEmployee)
-
-
+        self.client = Client.Client()
 
     def AddButtonEmployee(self):
         try:
@@ -26,7 +28,6 @@ class AddEmp(QtWidgets.QMainWindow):
             employee_dict['address'] = self.ui.adresse.text()
             employee_dict['cin'] = self.ui.cin.text()
 
-            employee_dict['phone'] = self.ui.phone.text()
             employee_dict['salary'] = float(self.ui.salary.value())
 
             employee_dict['admin'] = self.ui.choix_admin.currentIndex()
@@ -49,17 +50,12 @@ class AddEmp(QtWidgets.QMainWindow):
             elif employee_dict['cin'] == "":
                 self.tool.warning("cin")
                 return
-            elif employee_dict['phone'] == "":
-                self.tool.warning("phone")
-                return
             elif employee_dict['salary'] == "":
                 self.tool.warning("salary")
                 return
-            elif employee_dict['phone'] == "":
-                self.tool.warning("phone")
-                return
 
             self.user.addEmployee(employee_dict)
+            self.client.warning(f"Ajouter avec succes")
             #self.tool.warning("user added ")
 
 
@@ -83,5 +79,4 @@ class AddEmp(QtWidgets.QMainWindow):
         self.ui.mdp.setText("")
         self.ui.adresse.setText("")
         self.ui.cin.setText("")
-        self.ui.phone.setText("")
         self.ui.salary.setValue(0)

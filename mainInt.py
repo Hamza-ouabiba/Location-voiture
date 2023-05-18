@@ -201,7 +201,7 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             table.clearContents()  # Clear the existing data in the table
             table.setColumnCount(10)  # Set the number of columns in the table, including the image column
-
+            data = self.user.getSuperUserAll()
             table.setHorizontalHeaderLabels(
                 ["idUser", "cin", "nom", "prenom", "login", "admin", "address", "salary", "Edit",
                  "Delete"])  # Set the column labels
