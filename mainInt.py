@@ -483,7 +483,7 @@ class MainWindow(QtWidgets.QMainWindow):
                             QMessageBox.No
                         )
                         if confirm == QMessageBox.Yes:
-                            self.car.update(int(self.id_SelectedCar), int(idBrand), model, int(fuel), img, int(gearbox),
+                            self.car.update(self.id_SelectedCar, idBrand, model, fuel, img, gearbox,
                                             float(self.ui.price.text()), float(self.ui.power.text()),
                                             int(self.ui.seats.text()), int(self.ui.doors.value()), production_date,imagesList)
                             self.tool.warning("car model :" + model + " has been modified ")
