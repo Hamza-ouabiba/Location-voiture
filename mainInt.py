@@ -500,6 +500,7 @@ class MainWindow(QtWidgets.QMainWindow):
                             QMessageBox.Yes | QMessageBox.No,
                             QMessageBox.No
                         )
+                        print(fuel)
                         if confirm == QMessageBox.Yes:
                             self.car.add(idBrand, model, fuel, img, gearbox, float(self.ui.price.text()),
                                          float(self.ui.power.text()), int(self.ui.seats.text()),

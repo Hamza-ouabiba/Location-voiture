@@ -144,6 +144,7 @@ class tool:
             elif combo.objectName() == 'comboBoxFuel' or combo.objectName() == 'comboBoxFuel_1':
                 combo.addItem('Select Fuel')
                 data = self.fuel.getFuel()
+                print(data)
             elif combo.objectName() == 'comboAllBrands':
                 print("combo.addItem('Select Brand')")
                 combo.addItem('Select Brand')
