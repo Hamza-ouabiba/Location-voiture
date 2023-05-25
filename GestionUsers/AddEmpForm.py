@@ -18,6 +18,20 @@ class AddEmp(QtWidgets.QMainWindow):
         self.ui.valider_btn_emp.clicked.connect(self.AddButtonEmployee)
         self.client = Client.Client()
 
+    def testCin(self, cinUser, idUser):
+        try:
+            request = f"SELECT cin from super_utilisateur where idUser != '{idUser}'" if idUser != "" else "SELECT cin from super_utilisateur"
+            cins = self.user.getSuperUserAll()
+            for cin in cins:
+                print("data")
+                if(cin['cin'] != None):
+                    if(cinUser == cin['cin']):
+                        print("cin deja utilisé")
+                        return True
+            return False
+        except Exception as e:
+            print(e)
+
     def AddButtonEmployee(self):
         try:
             employee_dict= dict()
@@ -31,7 +45,6 @@ class AddEmp(QtWidgets.QMainWindow):
             employee_dict['salary'] = float(self.ui.salary.value())
 
             employee_dict['admin'] = self.ui.choix_admin.currentIndex()
-
             if employee_dict['nom'] == "":
                 self.tool.warning("Please enter a name.")
                 return
@@ -53,9 +66,11 @@ class AddEmp(QtWidgets.QMainWindow):
             elif employee_dict['salary'] == "":
                 self.tool.warning("salary")
                 return
-
-            self.user.addEmployee(employee_dict)
-            self.client.warning(f"Ajouter avec succes")
+            if(self.testCin(employee_dict['cin'],"") == False):
+                self.user.addEmployee(employee_dict)
+                self.client.warning(f"Ajouter avec succes")
+            else:
+                self.client.warning(f"Cin deja utilisé")
             #self.tool.warning("user added ")
 
 
